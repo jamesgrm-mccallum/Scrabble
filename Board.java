@@ -11,7 +11,14 @@ class Board {
                 gameBoard[x][y] = new Tile(new Coordinate(x, y), null, null);
             }
         }
+        //Star
+        gameBoard[8][8].setType("star");
         
+        //Special Tiles for left side of board
+        gameBoard[1][1].setType("Triple Word");
+        gameBoard[1][4].setType("Double Letter"); 
+        
+
     }
 
     public Tile[][] getTile(){
