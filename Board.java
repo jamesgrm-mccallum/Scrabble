@@ -136,10 +136,10 @@ class Board {
             row_accum += "---------------------------------------------------------------\n";
             for (int c = 0; c < 15; c++){
                 if (c == 0){
-                    row_accum += String.valueOf(r + 1);
                     if (r < 9){
                         row_accum += " ";
                     }
+                    row_accum += String.valueOf(r + 1);
                 }
                 
                 cell = String.format(" |%s ", " ");
@@ -157,6 +157,6 @@ class Board {
     }
     public static void main(String[] args) {
         Board gameBoard = new Board();
-        gameBoard.toString();
+        System.out.println(gameBoard);
     }
 }
