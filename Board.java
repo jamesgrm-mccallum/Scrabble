@@ -2,12 +2,13 @@ class Board {
     private Tile[][] gameBoard;
 
     private Board(){
+        // [ROW][COL]
         gameBoard = new Tile[15][15];
     }
 
-    private void generateBoard(){
-        for (int x = 0; x < 14; x ++){
-            for (int y = 0; y < 14; y ++){
+    public void generateBoard(){
+        for (int x = 0; x < 15; x ++){
+            for (int y = 0; y < 15; y ++){
                 gameBoard[x][y] = new Tile(new Coordinate(x, y), null, null);
             }
         }
@@ -24,24 +25,24 @@ class Board {
                          {0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0},
                          {0, 3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 3, 0},
                          {0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0}};
-        int[] middle =   {4, 0, 0, 1, 0, 0, 0, 5, 0, 0, 0, 1, 0, 0, 3};
+        int[] middle =   {4, 0, 0, 1, 0, 0, 0, 5, 0, 0, 0, 1, 0, 0, 4};
 
-        for (int y = 0; y < 6; y++){
-            for (int x = 0; x < 14; x ++){
-                if (halfs[x][y] == 1){
-                    gameBoard[x + 1][y + 1].setType("2L");
+        for (int y = 0; y < 7; y++){
+            for (int x = 0; x < 15; x ++){
+                if (halfs[y][x] == 1){
+                    gameBoard[y][x].setType("2L");
                 }
-                else if(halfs[x][y] == 2){
-                    gameBoard[x + 1][y + 1].setType("2W");
+                else if(halfs[y][x] == 2){
+                    gameBoard[y][x].setType("2W");
                 }
-                else if(halfs[x][y] == 3){
-                    gameBoard[x + 1][y + 1].setType("3L");
+                else if(halfs[y][x] == 3){
+                    gameBoard[y][x].setType("3L");
                 }
-                else if(halfs[x][y] == 4){
-                    gameBoard[x + 1][y + 1].setType("3W");
+                else if(halfs[y][x] == 4){
+                    gameBoard[y][x].setType("3W");
                 }
-                else if(halfs[x][y] == 5){
-                    gameBoard[x + 1][y + 1].setType("STAR");
+                else if(halfs[y][x] == 5){
+                    gameBoard[y][x].setType("STAR");
                 }
                 else{
                     
@@ -49,28 +50,52 @@ class Board {
             }
         }
 
-        for (int a = 6; a > 0; a--){
-            for (int b = 14; b > 0; b--){
-                if (halfs[b][a] == 1){
-                    gameBoard[b + 1][a + 9].setType("2L");
-                }
-                else if (halfs[b][a] == 2){
-                    gameBoard[b + 1][a + 9].setType("2W");
-                }
-                else if (halfs[b][a] == 3){
-                    gameBoard[b + 1][a + 9].setType("3L");
-                }
-                else if (halfs[b][a] == 4){
-                    gameBoard[b + 1][a + 9].setType("3W");
-                }
-                else if (halfs[b][a] == 5){
-                    gameBoard[b + 1][a + 9].setType("STAR");
-                }
-                else{
-                    
-                }
+        for (int i = 0; i < 15; i++ ){
+            if (middle[i] == 1){
+                gameBoard[7][i].setType("2L");
+            }
+            else if (middle[i] == 2){
+                gameBoard[7][i].setType("2W");
+            }
+            else if (middle[i] == 3){
+                gameBoard[7][i].setType("3L");
+            }
+            else if (middle[i] == 4){
+                gameBoard[7][i].setType("3W");
+            }
+            else if (middle[i] == 5){
+                gameBoard[7][i].setType("STAR");
+            }
+            else{
+                
             }
         }
+
+        // for (int a = 14; a >= 8; a--){
+        //     for (int b = 14; b >= 0; b--){
+        //         System.out.println(a + " " + b);
+        //         if (halfs[15 - a][b] == 1){
+        //             System.out.println(a + " " + b);
+        //             gameBoard[a + 1][b].setType("2L");
+        //         }
+        //         else if (halfs[15 - a][b] == 2){
+                    
+        //             gameBoard[a][b].setType("2W");
+        //         }
+        //         else if (halfs[15 - a][b] == 3){
+        //             gameBoard[a][b].setType("3L");
+        //         }
+        //         else if (halfs[15 - a][b] == 4){
+        //             gameBoard[a][b].setType("3W");
+        //         }
+        //         else if (halfs[15 - a][b] == 5){
+        //             gameBoard[a][b].setType("STAR");
+        //         }
+        //         else{
+                    
+        //         }
+        //     }
+        // }
         ////Star
         // gameBoard[8][8].setType("star");
         
@@ -142,7 +167,7 @@ class Board {
                     row_accum += String.valueOf(r + 1);
                 }
                 
-                cell = String.format(" |%s ", " ");
+                cell = String.format(" |%s ", gameBoard[r][c].toString());
                 row_accum += cell;
                 if (c == 14){
                     row_accum += " |";
@@ -157,6 +182,7 @@ class Board {
     }
     public static void main(String[] args) {
         Board gameBoard = new Board();
+        gameBoard.generateBoard();
         System.out.println(gameBoard);
     }
 }

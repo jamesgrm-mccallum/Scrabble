@@ -29,7 +29,29 @@ class Tile {
     }
 
     public String toString(){
-        return " ";
-    }
+        if (type != null){
+            if (type.equals("2L")){
+                return "1";
+            }
+            else if (type.equals("2W")){
+                return "2";
+            }
+            else if (type.equals("3L")){
+                return "3";
+            }
+            else if (type.equals("3W")){
+                return "4";
+            }
+            else if (type.equals("STAR")){
+                return "*";
+            }
+            else {
+                return " ";
+            }
+        }
+        else {
+            return " ";
+        }
+    }   
     
 }
