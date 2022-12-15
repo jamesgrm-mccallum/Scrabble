@@ -41,8 +41,22 @@ class Board {
                 else if(halfs[y][x] == 4){
                     gameBoard[y][x].setType("3W");
                 }
-                else if(halfs[y][x] == 5){
-                    gameBoard[y][x].setType("STAR");
+                else{
+                    
+                }
+            }
+            for (int x = 0; x < 15; x ++){
+                if (halfs[y][x] == 1){
+                    gameBoard[14 - y][14 - x].setType("2L");
+                }
+                else if(halfs[y][x] == 2){
+                    gameBoard[14 - y][14 - x].setType("2W");
+                }
+                else if(halfs[y][x] == 3){
+                    gameBoard[14 - y][14 - x].setType("3L");
+                }
+                else if(halfs[y][x] == 4){
+                    gameBoard[13 - (y - 1)][13 - (x - 1)].setType("3W");
                 }
                 else{
                     
@@ -70,71 +84,6 @@ class Board {
                 
             }
         }
-
-        // for (int a = 14; a >= 8; a--){
-        //     for (int b = 14; b >= 0; b--){
-        //         System.out.println(a + " " + b);
-        //         if (halfs[15 - a][b] == 1){
-        //             System.out.println(a + " " + b);
-        //             gameBoard[a + 1][b].setType("2L");
-        //         }
-        //         else if (halfs[15 - a][b] == 2){
-                    
-        //             gameBoard[a][b].setType("2W");
-        //         }
-        //         else if (halfs[15 - a][b] == 3){
-        //             gameBoard[a][b].setType("3L");
-        //         }
-        //         else if (halfs[15 - a][b] == 4){
-        //             gameBoard[a][b].setType("3W");
-        //         }
-        //         else if (halfs[15 - a][b] == 5){
-        //             gameBoard[a][b].setType("STAR");
-        //         }
-        //         else{
-                    
-        //         }
-        //     }
-        // }
-        ////Star
-        // gameBoard[8][8].setType("star");
-        
-        ////Special Tiles for left side of board
-        // gameBoard[1][1].setType("triple word");
-        // gameBoard[1][4].setType("double letter"); 
-        // gameBoard[1][8].setType("triple word");
-        // gameBoard[1][12].setType("double letter");
-        // gameBoard[1][15].setType("triple word");
-        // gameBoard[2][2].setType("double word");
-        // gameBoard[2][6].setType("triple letter");
-        // gameBoard[2][10].setType("triple letter");
-        // gameBoard[2][14].setType("double word");
-        // gameBoard[3][3].setType("double word");
-        // gameBoard[3][7].setType("double letter");
-        // gameBoard[3][9].setType("double letter");
-        // gameBoard[3][13].setType("double word");
-        // gameBoard[4][1].setType("double letter");
-        // gameBoard[4][4].setType("double word");
-        // gameBoard[4][8].setType("double letter");
-        // gameBoard[4][12].setType("double word");
-        // gameBoard[4][15].setType("double letter");
-        // gameBoard[5][5].setType("double word");
-        // gameBoard[5][11].setType("double word");
-        // gameBoard[6][2].setType("triple letter");
-        // gameBoard[6][6].setType("triple letter");
-        // gameBoard[6][10].setType("triple letter");
-        // gameBoard[6][14].setType("triple letter");
-        // gameBoard[7][8].setType("double letter");
-        // gameBoard[7][8].setType("double letter");
-        // gameBoard[7][8].setType("double letter");
-        // gameBoard[7][8].setType("double letter");
-
-
-
-
-
-
-
     }
 
     public Tile[][] getTile(){
@@ -155,7 +104,7 @@ class Board {
         }
 
         
-        accum += "   " + row_accum + "|" + "\n";
+        accum += "  " + row_accum + "|" + "\n";
         for (int r = 0; r < 15; r++){
             row_accum = "";
             row_accum += "---------------------------------------------------------------\n";
@@ -167,10 +116,10 @@ class Board {
                     row_accum += String.valueOf(r + 1);
                 }
                 
-                cell = String.format(" |%s ", gameBoard[r][c].toString());
+                cell = String.format("| %s ", gameBoard[r][c].toString());
                 row_accum += cell;
                 if (c == 14){
-                    row_accum += " |";
+                    row_accum += "|";
                 }
                 
             }
