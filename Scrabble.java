@@ -1,7 +1,7 @@
 import java.util.Collections;
 import java.util.ArrayList;
 import java.util.Arrays;
-class Scrabble{
+public class Scrabble{
 
     // checks to see if word in word list
 
@@ -72,10 +72,49 @@ class Scrabble{
     //takes in String word, String orientation, Coordinate starting_pos, String player
     //places down a word
     
-    public void placeWord(String word, String orientation, Coordinate start, player player){
+    public static void placeWord(String word, String orientation, Coordinate start, player player, Board gameboard)throws IllegalArgumentException{
+
         ArrayList<String> wordList = new ArrayList<String>(Arrays.asList(word.split("")));
         if (orientation.equals("vertical")){
-            
+           for (String letter : wordList){
+                for (int i = start.getY(); i <= start.getY() + word.length(); i ++){
+                    if (gameboard.getTile()[i][start.getX()].getPiece() == null){
+                        gameboard.getTile()[i][start.getX()].setPiece(new Piece(letter));
+                        for (Piece p : player.getDeck()){
+                            if (p.getLetter() == letter){
+                                player.getDeck().remove(p);
+                            }
+                        }
+                    }
+                    else {
+                        if (gameboard.getTile()[i][start.getX()].getPiece().getLetter() == letter){
+
+                        }
+                        else {
+                            throw new IllegalArgumentException("Path is obstructed!"); //CHANGE THIS
+                        }
+                    }
+                }
+           } 
+        }
+        else if (orientation.equals("vertical")){
+            for (String letter : wordList){
+                for (int i = start.getX(); i <= start.getX() + word.length(); i ++){
+                    if (gameboard.getTile()[start.getY()][i].getPiece() == null){
+                        gameboard.getTile()[start.getY()][i].setPiece(new Piece(letter));
+                        for (Piece p : player.getDeck()){
+                            if (p.getLetter() == letter){
+                                player.getDeck().remove(p);
+                            }
+                        }
+                    }
+                    else {
+                        if (gameboard.getTile()[i][start.getX()].getPiece().getLetter() != letter){
+                            throw new IllegalArgumentException("Path is obstructed!");
+                        }
+                    }
+                }
+           }  
         }
     }
 

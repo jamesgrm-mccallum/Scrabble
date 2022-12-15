@@ -1,10 +1,8 @@
 class Piece {
     String letter;
-    int pointVal;
 
-    public Piece(String letter, int pointVal){
-        this.letter = letter;
-        this.pointVal = pointVal;
+    public Piece(String letter){
+        this.letter = letter;;
     }
 
     public String getLetter() {
@@ -15,11 +13,4 @@ class Piece {
         this.letter = letter;
     }
 
-    public int getPointVal() {
-        return pointVal;
-    }
-
-    public void setPointVal(int pointVal) {
-        this.pointVal = pointVal;
-    }
 }

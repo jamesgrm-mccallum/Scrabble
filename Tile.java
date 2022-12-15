@@ -30,7 +30,7 @@ class Tile {
 
     public String toString(){
         if (piece != null){
-            return Character.toString(piece.getLetter());
+            return piece.getLetter();
         }
         else if (type != null){
             if (type.equals("2L")){
