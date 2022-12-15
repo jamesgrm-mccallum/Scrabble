@@ -1,17 +1,17 @@
 class Piece {
-    char letter;
+    String letter;
     int pointVal;
 
-    public Piece(char letter, int pointVal){
+    public Piece(String letter, int pointVal){
         this.letter = letter;
         this.pointVal = pointVal;
     }
 
-    public char getLetter() {
+    public String getLetter() {
         return letter;
     }
 
-    public void setLetter(char letter) {
+    public void setLetter(String letter) {
         this.letter = letter;
     }
 
