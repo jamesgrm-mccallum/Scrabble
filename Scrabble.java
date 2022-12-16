@@ -2,19 +2,49 @@ import java.util.Collections;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 public class Scrabble{
 
     // checks to see if word in word list
 
     public boolean isWord(String word){
-        return true;
+        
+        try{
+            File file = new File("words.txt");
+            Scanner input = new Scanner(file);
+            while (input.hasNextLine()){
+                String fileWord = input.nextLine();
+                if (fileWord.toUpperCase().equals(word.toUpperCase())){
+                    return true;
+                }
+            }
+            input.close();
+        }
+        catch (FileNotFoundException e){
+            System.out.println("File not found!");
+            
+        }
+        return false;
+
+    }
+
+
+    public boolean validateConnection(String word, String direction, Coordinate start, player player, Board gameboard){
+        ArrayList<String> wordList = new ArrayList<String>(Arrays.asList(word.split("")));
+        for (String letter : wordList){
+            if (direction.equals("vertical")){
+                if ()
+            }
+        }
     }
 
     //validate word returns boolean
     //takes in: String word, String orientation, Coordinate starting pos, String player
     //checks to see if a word is a real word, player has correct pieces for word, word can fit on board
 
-    public boolean validateInput(String word, String direction, Coordinate start, player player)throws IllegalArgumentException{
+    public boolean validateInput(String word, String direction, Coordinate start, player player, Board gameboard)throws IllegalArgumentException{
         // checks that word is a word in the dictionary
         if (isWord(word)){
             // logic for getting sorted strings of player deck and word
@@ -49,6 +79,21 @@ public class Scrabble{
 
                     //Checks that end point is within board
                     if (endPoint.getX() <= 14 && endPoint.getX() >= 0 && endPoint.getY() <= 14 && endPoint.getY() >= 0){
+                        int i;
+                        for (String letter : wordList){
+                            if (direction.equals("vertical")){
+                                i = start.getY();
+                                if (gameboard.getTile()[i - 1][start.getX()].getPiece() == null && gameboard.getTile()[i - 1][start.getX()].getPiece().getLetter() != letter){
+                                    return false;
+                                }
+                            }
+                            else if (direction.equals("horizontal")){
+                                i = start.getX();
+                                if (gameboard.getTile()[start.getY()][i - 1].getPiece() == null && gameboard.getTile()[start.getY()][i - 1].getPiece().getLetter() != letter){
+                                    return false;
+                                }
+                            }
+                        }
                         return true;
                     }
                     else{
@@ -80,21 +125,13 @@ public class Scrabble{
             int i = start.getY();
             for (String letter : wordList){
                 hasRemoved = false;
-                if (gameboard.getTile()[i - 1][start.getX()- 1].getPiece() == null){
-                    gameboard.getTile()[i - 1][start.getX()- 1].setPiece(new Piece(letter));
-                    
-                    for (Iterator<Piece> it = player.getDeck().iterator(); it.hasNext();) {
-                        Piece p = it.next();
-                        if (p.getLetter().equals(letter.toUpperCase()) && hasRemoved == false) {
-                            System.out.println("HI");
-                            it.remove();
-                            hasRemoved = true;
-                        }
-                    }
-                }
-                else {
-                    if (gameboard.getTile()[i - 1][start.getX() - 1].getPiece().getLetter() != letter){
-                        throw new IllegalArgumentException("Path is obstructed!");
+                gameboard.getTile()[i - 1][start.getX()- 1].setPiece(new Piece(letter));
+                
+                for (Iterator<Piece> it = player.getDeck().iterator(); it.hasNext();) {
+                    Piece p = it.next();
+                    if (p.getLetter().equals(letter.toUpperCase()) && hasRemoved == false) {
+                        it.remove();
+                        hasRemoved = true;
                     }
                 }
                 i++;
@@ -104,22 +141,17 @@ public class Scrabble{
         else if (orientation.equals("horizontal")){
             int i = start.getX();
             for (String letter : wordList){
-                if (gameboard.getTile()[start.getY() - 1][i- 1].getPiece() == null){
-                    gameboard.getTile()[start.getY() - 1][i - 1].setPiece(new Piece(letter));
-                    for (Iterator<Piece> it = player.getDeck().iterator(); it.hasNext();) {
-                        Piece p = it.next();
-                        if (p.getLetter().toUpperCase().equals(letter.toUpperCase()) && hasRemoved == false) {
-                            System.out.println("HI");
-                            it.remove();
-                            hasRemoved = true;
-                        }
+                
+                gameboard.getTile()[start.getY() - 1][i - 1].setPiece(new Piece(letter));
+                for (Iterator<Piece> it = player.getDeck().iterator(); it.hasNext();) {
+                    Piece p = it.next();
+                    if (p.getLetter().toUpperCase().equals(letter.toUpperCase()) && hasRemoved == false) {
+                        System.out.println("HI");
+                        it.remove();
+                        hasRemoved = true;
                     }
                 }
-                else {
-                    if (gameboard.getTile()[start.getY() - 1][i -1].getPiece().getLetter() != letter){
-                        throw new IllegalArgumentException("Path is obstructed!");
-                    }
-                }
+                
                 i++;
            }  
         }
