@@ -59,7 +59,7 @@ class Board {
                     gameBoard[14 - y][14 - x].setType("3L");
                 }
                 else if(halfs[y][x] == 4){
-                    gameBoard[13 - (y - 1)][13 - (x - 1)].setType("3W");
+                    gameBoard[14 - y][14 - x].setType("3W");
                 }
                 else{
                     
@@ -143,9 +143,11 @@ class Board {
         letters.add(new Piece("L"));
         letters.add(new Piece("L"));
         letters.add(new Piece("O"));
+        letters.add(new Piece("O"));
         
         player player1 = new player(0, "James", 0, letters);
-        Scrabble.placeWord("hello", "horizontal", start, player1, gameBoard);
+        Scrabble.placeWord("hello", "vertical", start, player1, gameBoard);
         System.out.println(gameBoard);
+        System.out.println(player1.getDeck());
     }
 }

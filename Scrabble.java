@@ -1,6 +1,7 @@
 import java.util.Collections;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 public class Scrabble{
 
     // checks to see if word in word list
@@ -71,50 +72,59 @@ public class Scrabble{
     //place word returns void
     //takes in String word, String orientation, Coordinate starting_pos, String player
     //places down a word
-    
     public static void placeWord(String word, String orientation, Coordinate start, player player, Board gameboard)throws IllegalArgumentException{
 
         ArrayList<String> wordList = new ArrayList<String>(Arrays.asList(word.split("")));
+        boolean hasRemoved = false;
         if (orientation.equals("vertical")){
-           for (String letter : wordList){
-                for (int i = start.getY(); i <= start.getY() + word.length(); i ++){
-                    if (gameboard.getTile()[i][start.getX()].getPiece() == null){
-                        gameboard.getTile()[i][start.getX()].setPiece(new Piece(letter));
-                        for (Piece p : player.getDeck()){
-                            if (p.getLetter() == letter){
-                                player.getDeck().remove(p);
-                            }
-                        }
-                    }
-                    else {
-                        if (gameboard.getTile()[i][start.getX()].getPiece().getLetter() == letter){
-
-                        }
-                        else {
-                            throw new IllegalArgumentException("Path is obstructed!"); //CHANGE THIS
-                        }
-                    }
-                }
-           } 
-        }
-        else if (orientation.equals("vertical")){
+            int i = start.getY();
             for (String letter : wordList){
-                for (int i = start.getX(); i <= start.getX() + word.length(); i ++){
-                    if (gameboard.getTile()[start.getY()][i].getPiece() == null){
-                        gameboard.getTile()[start.getY()][i].setPiece(new Piece(letter));
-                        for (Piece p : player.getDeck()){
-                            if (p.getLetter() == letter){
-                                player.getDeck().remove(p);
-                            }
-                        }
-                    }
-                    else {
-                        if (gameboard.getTile()[i][start.getX()].getPiece().getLetter() != letter){
-                            throw new IllegalArgumentException("Path is obstructed!");
+                hasRemoved = false;
+                if (gameboard.getTile()[i - 1][start.getX()- 1].getPiece() == null){
+                    gameboard.getTile()[i - 1][start.getX()- 1].setPiece(new Piece(letter));
+                    
+                    for (Iterator<Piece> it = player.getDeck().iterator(); it.hasNext();) {
+                        Piece p = it.next();
+                        if (p.getLetter().equals(letter.toUpperCase()) && hasRemoved == false) {
+                            System.out.println("HI");
+                            it.remove();
+                            hasRemoved = true;
                         }
                     }
                 }
+                else {
+                    if (gameboard.getTile()[i - 1][start.getX() - 1].getPiece().getLetter() != letter){
+                        throw new IllegalArgumentException("Path is obstructed!");
+                    }
+                }
+                i++;
            }  
+        }
+        
+        else if (orientation.equals("horizontal")){
+            int i = start.getX();
+            for (String letter : wordList){
+                if (gameboard.getTile()[start.getY() - 1][i- 1].getPiece() == null){
+                    gameboard.getTile()[start.getY() - 1][i - 1].setPiece(new Piece(letter));
+                    for (Iterator<Piece> it = player.getDeck().iterator(); it.hasNext();) {
+                        Piece p = it.next();
+                        if (p.getLetter().toUpperCase().equals(letter.toUpperCase()) && hasRemoved == false) {
+                            System.out.println("HI");
+                            it.remove();
+                            hasRemoved = true;
+                        }
+                    }
+                }
+                else {
+                    if (gameboard.getTile()[start.getY() - 1][i -1].getPiece().getLetter() != letter){
+                        throw new IllegalArgumentException("Path is obstructed!");
+                    }
+                }
+                i++;
+           }  
+        }
+        else{
+            throw new IllegalArgumentException("Orientation must be either horizontal or vertical");
         }
     }
 
