@@ -31,13 +31,13 @@ public class Scrabble{
     }
 
 
-    public boolean validateConnection(String word, String direction, Coordinate start, player player, Board gameboard){
-        // ArrayList<String> wordList = new ArrayList<String>(Arrays.asList(word.split("")));
-        // for (String letter : wordList){
-        //     if (direction.equals("vertical")){
-        //         if ()
-        //     }
-        // }
+    public boolean validateConnection(String letter, String direction, Coordinate letterCord, player player, Board gameboard){
+        if (direction.equals("vertical")){
+            if (gameboard.getTile()[][])
+        }
+        else if (direction.equals("horizontal")){
+
+        }
         return true;
     }
 
@@ -84,14 +84,22 @@ public class Scrabble{
                         for (String letter : wordList){
                             if (direction.equals("vertical")){
                                 i = start.getY();
-                                if (gameboard.getTile()[i - 1][start.getX()].getPiece().getLetter() != letter){
-                                    return false;
+                                if (gameboard.getTile()[i - 1][start.getX()].getPiece() == null){
+                                    
                                 }
+                                else {
+                                    if (gameboard.getTile()[i - 1][start.getX()].getPiece().getLetter() != letter){
+                                        return false;
+                                    }
+                                }
+
                             }
                             else if (direction.equals("horizontal")){
                                 i = start.getX();
-                                if (gameboard.getTile()[start.getY()][i - 1].getPiece().getLetter() != letter){
-                                    return false;
+                                if (gameboard.getTile()[start.getY()][i - 1].getPiece() != null){
+                                    if (gameboard.getTile()[start.getY()][i - 1].getPiece().getLetter() != letter){
+                                        return false;
+                                    }
                                 }
                             }
                         }
