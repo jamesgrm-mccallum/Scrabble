@@ -32,13 +32,54 @@ public class Scrabble{
 
 
     public boolean validateConnection(String letter, String direction, Coordinate letterCord, player player, Board gameboard){
-        if (direction.equals("vertical")){
-            if (gameboard.getTile()[][])
+        String word = "";
+        String decrease = "";
+        String increase = "";
+        
+            
+        //checking the side of the letter for a word
+        if (gameboard.getTile()[letterCord.getY() - 1][letterCord.getX()].getPiece() != null){
+            int leftCord = 1;
+            while(gameboard.getTile()[letterCord.getY() - leftCord][letterCord.getX()].getPiece() != null && letterCord.getY() - leftCord >= 0){
+                decrease += gameboard.getTile()[letterCord.getY() - leftCord][letterCord.getX()].getPiece().getLetter();
+                leftCord ++;
+            }
         }
-        else if (direction.equals("horizontal")){
-
+        //check the right side of letter for a word
+        if (gameboard.getTile()[letterCord.getY() + 1][letterCord.getX()] != null){
+            int rightCord = 1;
+            while(gameboard.getTile()[letterCord.getY() + rightCord][letterCord.getX()].getPiece() != null && letterCord.getY() + rightCord <= 14){
+                increase += gameboard.getTile()[letterCord.getY() + rightCord][letterCord.getX()].getPiece().getLetter();
+                rightCord ++;
+            }
+        }            
+        
+        //getting the 
+        if (gameboard.getTile()[letterCord.getY()][letterCord.getX() - 1] != null){
+            int decreaseCord = 1;
+            while (gameboard.getTile()[letterCord.getY()][letterCord.getX() - decreaseCord] != null && letterCord.getX() - decreaseCord >= 0){
+                decrease += gameboard.getTile()[letterCord.getY()][letterCord.getX() - decreaseCord];
+                decreaseCord ++;
+            }
         }
-        return true;
+        //getting the letters below the letter
+        if (gameboard.getTile()[letterCord.getY()][letterCord.getX() + 1] != null){
+            int increaseCord = 1;
+            while (gameboard.getTile()[letterCord.getY()][letterCord.getX() + increaseCord] != null && letterCord.getX() + increaseCord <= 14){
+                increase += gameboard.getTile()[letterCord.getY()][letterCord.getX() + increaseCord];
+                increaseCord ++;
+            }
+        }
+            
+        
+        //assembling and checking word
+        word = decrease + letter + increase;
+        if (isWord(word)){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     //validate word returns boolean
