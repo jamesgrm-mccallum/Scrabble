@@ -31,34 +31,35 @@ public class Scrabble{
     }
 
 
-    public boolean validateConnection(String letter, String direction, Coordinate letterCord, player player, Board gameboard){
-        String word = "";
-        String decrease = "";
-        String increase = "";
+    public boolean validateConnection(String letter, Coordinate letterCord, player player, Board gameboard){
+        String wordVertical = "";
+        String wordHorizontal = "";
+        String right = "";
+        String left = "";
+        String up = "";
+        String down = "";
         
-            
-        //checking the side of the letter for a word
+        //getting the letters to the left of the letter
         if (gameboard.getTile()[letterCord.getY() - 1][letterCord.getX()].getPiece() != null){
             int leftCord = 1;
             while(gameboard.getTile()[letterCord.getY() - leftCord][letterCord.getX()].getPiece() != null && letterCord.getY() - leftCord >= 0){
-                decrease += gameboard.getTile()[letterCord.getY() - leftCord][letterCord.getX()].getPiece().getLetter();
+                left += gameboard.getTile()[letterCord.getY() - leftCord][letterCord.getX()].getPiece().getLetter();
                 leftCord ++;
             }
         }
-        //check the right side of letter for a word
+        //getting the letters to the right of the letter
         if (gameboard.getTile()[letterCord.getY() + 1][letterCord.getX()] != null){
             int rightCord = 1;
             while(gameboard.getTile()[letterCord.getY() + rightCord][letterCord.getX()].getPiece() != null && letterCord.getY() + rightCord <= 14){
-                increase += gameboard.getTile()[letterCord.getY() + rightCord][letterCord.getX()].getPiece().getLetter();
+                right += gameboard.getTile()[letterCord.getY() + rightCord][letterCord.getX()].getPiece().getLetter();
                 rightCord ++;
             }
-        }            
-        
-        //getting the 
+        }
+        //getting the letters above the letter
         if (gameboard.getTile()[letterCord.getY()][letterCord.getX() - 1] != null){
             int decreaseCord = 1;
             while (gameboard.getTile()[letterCord.getY()][letterCord.getX() - decreaseCord] != null && letterCord.getX() - decreaseCord >= 0){
-                decrease += gameboard.getTile()[letterCord.getY()][letterCord.getX() - decreaseCord];
+                up += gameboard.getTile()[letterCord.getY()][letterCord.getX() - decreaseCord];
                 decreaseCord ++;
             }
         }
@@ -66,15 +67,15 @@ public class Scrabble{
         if (gameboard.getTile()[letterCord.getY()][letterCord.getX() + 1] != null){
             int increaseCord = 1;
             while (gameboard.getTile()[letterCord.getY()][letterCord.getX() + increaseCord] != null && letterCord.getX() + increaseCord <= 14){
-                increase += gameboard.getTile()[letterCord.getY()][letterCord.getX() + increaseCord];
+                down += gameboard.getTile()[letterCord.getY()][letterCord.getX() + increaseCord];
                 increaseCord ++;
             }
         }
-            
         
-        //assembling and checking word
-        word = decrease + letter + increase;
-        if (isWord(word)){
+        //Compiling words and checking if they are in dictionary
+        wordVertical = up + letter + down;
+        wordHorizontal = left + letter + right;
+        if (isWord(wordVertical) && isWord(wordHorizontal)){
             return true;
         }
         else{
@@ -121,28 +122,23 @@ public class Scrabble{
 
                     //Checks that end point is within board
                     if (endPoint.getX() <= 14 && endPoint.getX() >= 0 && endPoint.getY() <= 14 && endPoint.getY() >= 0){
-                        int i;
-                        for (String letter : wordList){
-                            if (direction.equals("vertical")){
-                                i = start.getY();
-                                if (gameboard.getTile()[i - 1][start.getX()].getPiece() == null){
-                                    
-                                }
-                                else {
-                                    if (gameboard.getTile()[i - 1][start.getX()].getPiece().getLetter() != letter){
-                                        return false;
-                                    }
-                                }
-
-                            }
-                            else if (direction.equals("horizontal")){
-                                i = start.getX();
-                                if (gameboard.getTile()[start.getY()][i - 1].getPiece() != null){
-                                    if (gameboard.getTile()[start.getY()][i - 1].getPiece().getLetter() != letter){
-                                        return false;
-                                    }
+                        if (direction.equals("vertical")){
+                            int i = start.getY();
+                            for (String letter : wordList){
+                                if (!validateConnection(letter, new Coordinate(start.getX(), i + 1 ), player, gameboard)){
+                                    return false;
                                 }
                             }
+                            i++;
+                        }
+                        else {
+                            int i = start.getX();
+                            for (String letter : wordList){
+                                if (!validateConnection(letter, new Coordinate(i + 1, start.getY()), player, gameboard)){
+                                    return false;
+                                }
+                            }
+                            i++;
                         }
                         return true;
                     }
@@ -209,6 +205,10 @@ public class Scrabble{
             throw new IllegalArgumentException("Orientation must be either horizontal or vertical");
         }
     }
+    
+    //tallyWord
+
+    //tallyPlay
 
 
 
