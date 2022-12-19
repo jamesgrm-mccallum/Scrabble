@@ -206,7 +206,34 @@ public class Scrabble{
         }
     }
     
+    public static ArrayList<String> toStringArray(String expr){
+        ArrayList<String> wordArray = new ArrayList<String>();
+        for (int i = 0; i < expr.length(); i++){
+            wordArray.add(expr.substring(i, i + 1));
+        }
+        return wordArray;
+    } 
+    
     //tallyWord
+    public int tallyWord(String orientation, String word, Coordinate start, Board gameboard, player player){
+        int word_score = 0;
+        int lettermultiplier = 1;
+        int mulitplier = 1;
+
+        if (orientation.equals("vertical")){
+            int i = start.getY();
+            for (String letter : toStringArray(word)){
+                Tile currentTile = gameboard.getTile()[i][start.getX()];
+
+            }
+        }
+        else if(orientation.equals("horizontal")){
+            int i = start.getX();
+            for (String letter : toStringArray(word)){
+
+            }
+        }
+    }
 
     //tallyPlay
 
