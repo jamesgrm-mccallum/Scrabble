@@ -1,18 +1,9 @@
-import java.util.*;
-
 public class test {
     public static void main(String[] args) {
-    if ("abcc".contains("abc")){
-        System.out.println("true");
+        String tester = "hello world";
+        for (int i = 0; i < tester.length(); i++){
+            System.out.println(tester.toCharArray());
+        }
+    
     }
-    ArrayList<String> strings = new ArrayList<String>();
-    strings.add("h");
-    strings.add("e");
-    strings.add("l");
-    strings.add("l");
-    strings.add("o");
-    String listString = String.join("", strings);
-    System.out.println(listString);
-    System.out.println(listString.length());
-    }
-    }
+}
