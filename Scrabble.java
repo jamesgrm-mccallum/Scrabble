@@ -215,7 +215,7 @@ public class Scrabble{
     } 
     
     //tallyWord
-    public int tallyWord(String orientation, String word, Coordinate start, Board gameboard, player player){
+    public int tallyWord(String orientation, String word, Coordinate start, Board gameboard, player player, Bag bag){
         int word_score = 0;
         int lettermultiplier = 1;
         int mulitplier = 1;
@@ -224,15 +224,57 @@ public class Scrabble{
             int i = start.getY();
             for (String letter : toStringArray(word)){
                 Tile currentTile = gameboard.getTile()[i][start.getX()];
-
+                if (currentTile.getType() != null){
+                    if (currentTile.getType() == "2L"){
+                        lettermultiplier = 2;
+                    }
+                    else if (currentTile.getType() == "2W"){
+                        mulitplier = mulitplier * 2;
+                    }
+                    else if(currentTile.getType() == "3L"){
+                        lettermultiplier = 3;
+                    }
+                    else {
+                        mulitplier = mulitplier * 3;
+                    }
+                }
+                word_score += bag.getValues().get(letter) * lettermultiplier;
+                lettermultiplier = 1;
+                i ++;
             }
         }
         else if(orientation.equals("horizontal")){
             int i = start.getX();
             for (String letter : toStringArray(word)){
-
+                Tile currentTile = gameboard.getTile()[start.getY()][i];
+                if (currentTile.getType() != null){
+                    if (currentTile.getType() == "2L"){
+                        lettermultiplier = 2;
+                    }
+                    else if (currentTile.getType() == "2W"){
+                        mulitplier = mulitplier * 2;
+                    }
+                    else if(currentTile.getType() == "3L"){
+                        lettermultiplier = 3;
+                    }
+                    else {
+                        mulitplier = mulitplier * 3;
+                    }
+                }
+                word_score += bag.getValues().get(letter) * lettermultiplier;
+                lettermultiplier = 1;
+                i++;
             }
         }
+        else {
+            throw new IllegalArgumentException();
+        }
+
+        if (word.length() == 7){
+            word_score += 50;
+        }
+        
+        return word_score * mulitplier;
     }
 
     //tallyPlay

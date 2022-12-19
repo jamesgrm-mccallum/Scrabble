@@ -2,7 +2,7 @@ import java.util.HashMap;
 import java.util.ArrayList;
 
 class Bag {
-    HashMap<Integer, String> values = new HashMap<Integer, String>();
+    HashMap<String, Integer> values = new HashMap<String, Integer>();
     ArrayList<Piece> contents = new ArrayList<Piece>();
 
     public Bag(ArrayList<Piece> contents){
@@ -17,6 +17,14 @@ class Bag {
         this.contents = contents;
     }
 
+    public HashMap<String, Integer> getValues() {
+        return values;
+    }
+
+    public void setValues(HashMap<String, Integer> values) {
+        this.values = values;
+    }
+
     public void generateValues(){
         String onePoint = "AEIOULNSTR";
         String twoPoint = "DG";
@@ -27,28 +35,30 @@ class Bag {
         String tenPoint = "QZ";
         
         for (String letter : Scrabble.toStringArray(onePoint)){
-            values.put(1, letter);
+            values.put(letter, 1);
         }
         for (String letter : Scrabble.toStringArray(twoPoint)){
-            values.put(2, letter);
+            values.put(letter, 2);
         }
         for (String letter : Scrabble.toStringArray(threePoint)){
-            values.put(3, letter);
+            values.put(letter, 3);
         }
         for (String letter : Scrabble.toStringArray(fourPoint)){
-            values.put(4, letter);
+            values.put(letter, 4);
         }
         for (String letter : Scrabble.toStringArray(fivePoint)){
-            values.put(5, letter);
+            values.put(letter, 5);
         }
         for (String letter : Scrabble.toStringArray(eightPoint)){
-            values.put(8, letter);
+            values.put(letter, 8);
         }
         for (String letter : Scrabble.toStringArray(tenPoint)){
-            values.put(10, letter);
+            values.put(letter, 10);
         }
         
     }
+
+    
 
     
 }
