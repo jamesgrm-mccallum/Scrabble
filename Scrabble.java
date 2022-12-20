@@ -8,6 +8,7 @@ import java.util.Scanner;
 import java.io.FileWriter;
 import java.io.IOException;
 public class Scrabble{
+    private static Scanner input = new Scanner(System.in);
 
     //TODO docstrings
     //TODO comment code
@@ -32,6 +33,15 @@ public class Scrabble{
         }
         return false;
 
+    }
+
+    private String getInput(){
+        
+            //Variable for storing input
+            String userInput = input.next();
+            
+            //returns input
+            return userInput;
     }
 
 
@@ -337,7 +347,7 @@ public class Scrabble{
     }
     
     public void exchangetiles(){
-        
+        //TODO exhange tiles
     }
 
 
