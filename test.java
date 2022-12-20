@@ -1,8 +1,11 @@
+
 public class test {
+    public static String[] tester(){
+        return new String[]{"hello", "world"};
+    }
     public static void main(String[] args) {
-        String tester = "hello world";
-        for (int i = 0; i < tester.length(); i++){
-            System.out.println(tester.toCharArray());
+        for (String word : tester()){
+            System.out.println(word);
         }
     
     }

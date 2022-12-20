@@ -31,7 +31,7 @@ public class Scrabble{
     }
 
 
-    public boolean validateConnection(String letter, Coordinate letterCord, player player, Board gameboard){
+    public String[] findConnections(String letter, Coordinate letterCord, player player, Board gameboard){
         String wordVertical = "";
         String wordHorizontal = "";
         String right = "";
@@ -75,7 +75,15 @@ public class Scrabble{
         //Compiling words and checking if they are in dictionary
         wordVertical = up + letter + down;
         wordHorizontal = left + letter + right;
-        if (isWord(wordVertical) && isWord(wordHorizontal)){
+
+        return new String[]{wordVertical, wordHorizontal};
+    }
+
+
+    public boolean validateConnection(String letter, Coordinate letterCord, player player, Board gameboard){
+        String[] connections = findConnections(letter, letterCord, player, gameboard);
+
+        if (isWord(connections[0]) && isWord(connections[1])){
             return true;
         }
         else{
@@ -277,12 +285,59 @@ public class Scrabble{
         return word_score * mulitplier;
     }
 
+    public Coordinate getStartFromLetter(String word, String orientation, String letter, Coordinate letterCord, Board gameboard){
+        ArrayList<String> wordAsList = toStringArray(word);
+        int letterIndex = wordAsList.indexOf(letter);
+
+        if (orientation.equals("vertical")){
+            return new Coordinate(letterCord.getX(), letterCord.getY() - letterIndex);
+        }
+        else if (orientation.equals("horizontal")){
+            return new Coordinate(letterCord.getX() - letterIndex, letterCord.getY());
+        }
+        else {
+            throw new IllegalArgumentException();
+        }
+    }
+
     //tallyPlay
+    public int tallyPlay(String word, Coordinate start, String orientation, player player, Board gameboard, Bag bag){
+        int playScore = 0;
+        if (orientation.equals("vertical")){
+            int i = start.getY();
+            for (String letter : toStringArray(word)){
+                Coordinate letterCord = new Coordinate(start.getX(), start.getY() + (i - start.getY()));
+                String[] connections = findConnections(letter , getStartFromLetter(word, orientation, letter, letterCord, gameboard), player, gameboard);
+                playScore += tallyWord(orientation, connections[0], start, gameboard, player, bag);
+                i++;
+            }
+        }
+        else if (orientation.equals("horizontal")){
+            int i = start.getX();
+            for (String letter : toStringArray(word)){
+                Coordinate letterCord = new Coordinate(start.getX() + (i - start.getX()), start.getY());
+                String[] connections = findConnections(letter , getStartFromLetter(word, orientation, letter, letterCord, gameboard), player, gameboard);
+                playScore += tallyWord(orientation, connections[1], start, gameboard, player, bag);
+                i++;
+            }
+        }
+
+        return playScore;
+    }
+
+    //TODO MENU METHOD
+    
+
+    //TODO HIGHSCORE METHOD
+
+
+    //TODO TURN
+
 
 
 
 
     public static void main(String[] args) {
-        
+        // TODO MAIN
     }
 }
