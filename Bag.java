@@ -58,6 +58,13 @@ class Bag {
         
     }
 
+    public void generateContents(){
+        ArrayList<String> alpha = Scrabble.toStringArray("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        for (String letter : alpha){
+            
+        }
+    }
+
     
 
     

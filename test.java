@@ -3,6 +3,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.Random;
 
 public class test {
     public static int tester(){
@@ -37,8 +38,21 @@ public class test {
             }
         }
     }
+
+    public static void random(){
+        Random rand = new Random();
+        for (int i = 0; i < 11; i++){
+            int randint = rand.nextInt(0, 10);
+            System.out.println(randint);
+        }
+        
+    }
     public static void main(String[] args) {
-        player player = new player(0, "James", 50, null);
-        newHighScore(player);
+        String deckString = "";
+        for (Piece piece : deck){
+            deckString += piece.getLetter().toUpperCase();
+            deckString += " ";
+        }
+        return "[" + deckString + "]";
     }
 }

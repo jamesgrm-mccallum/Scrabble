@@ -39,4 +39,14 @@ class player {
     public void setPlayerID(int playerID) {
         this.playerID = playerID;
     }
+
+    public String deckToString(){
+        String deckString = "";
+        for (Piece piece : deck){
+            deckString += piece.getLetter().toUpperCase();
+            deckString += " ";
+        }
+        
+        return "[" + deckString.substring(0, deckString.length() - 1) + "]";
+    }
 }

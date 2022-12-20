@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Random;
 public class Scrabble{
     private static Scanner input = new Scanner(System.in);
 
@@ -341,13 +342,32 @@ public class Scrabble{
 
     
 
-    public void playerMenu(){
-        //TODO MENU METHOD
+    public void playerMenu(player player, Board gameboard){
+        System.out.println(player.getName() + "\'s turn!" );
+        System.out.println(player.deckToString());
+        
 
     }
+
     
-    public void exchangetiles(){
-        //TODO exhange tiles
+    
+    public void exchangetiles(player player, Bag bag) {
+        System.out.println("Enter pieces to replace: ");
+        String replacePieces = getInput().replace(" ", "");
+
+        ArrayList<Integer> replacePiecesList = new ArrayList<Integer>();      
+        for (int i = 0; i < replacePieces.length(); i ++){
+            replacePiecesList.add(Integer.valueOf(replacePieces.substring(i, i + 1)));
+        }
+
+        Random rand = new Random();
+        for (int piece : replacePiecesList){
+            piece = piece - 1;
+            int randint = rand.nextInt(0, bag.getContents().size());
+            Piece randPiece = bag.getContents().get(randint);
+            player.getDeck().set(piece, randPiece);
+            bag.getContents().remove(randint);
+        }
     }
 
 

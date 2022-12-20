@@ -148,6 +148,5 @@ class Board {
         player player1 = new player(0, "James", 0, letters);
         Scrabble.placeWord("hello", "vertical", start, player1, gameBoard);
         System.out.println(gameBoard);
-        System.out.println(player1.getDeck());
     }
 }
