@@ -5,10 +5,14 @@ import java.util.Iterator;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.io.FileWriter;
+import java.io.IOException;
 public class Scrabble{
 
-    // checks to see if word in word list
+    //TODO docstrings
+    //TODO comment code
 
+    // checks to see if word in word list
     public boolean isWord(String word){
         
         try{
@@ -325,17 +329,53 @@ public class Scrabble{
         return playScore;
     }
 
-    //TODO MENU METHOD
     
 
-    //TODO HIGHSCORE METHOD
+    public void playerMenu(){
+        //TODO MENU METHOD
 
+    }
+    
+    public void exchangetiles(){
+        
+    }
+
+
+    public int getHighScore(){
+        int score = 0;
+        try {
+            File file = new File("highscore.txt");
+            Scanner input = new Scanner(file);
+            String last = ""; 
+            while (input.hasNextLine()) {
+                last = input.nextLine();
+            }
+            String replacedLine = last.replace(" ", "");
+            int hyphinIndex = replacedLine.indexOf("-");
+            input.close();
+            score = Integer.valueOf(replacedLine.substring(hyphinIndex + 1));
+        }
+        catch (FileNotFoundException e){
+            System.out.println("File does not exist.");
+        }
+        return score;
+    }
+
+    public void newHighScore(player player){
+        if (player.getPoints() > getHighScore()){
+            try{
+                File file = new File("highscore.txt");
+                FileWriter writer = new FileWriter(file, true);
+                writer.write("\n" + player.getName() + " - " + String.valueOf(player.getPoints()));
+                writer.close();
+            }
+            catch (IOException e) {
+                System.out.println("File cannot be opened.");
+            }
+        }
+    }
 
     //TODO TURN
-
-
-
-
 
     public static void main(String[] args) {
         // TODO MAIN
