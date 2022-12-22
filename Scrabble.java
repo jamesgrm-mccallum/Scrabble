@@ -405,6 +405,8 @@ public class Scrabble{
         }
     }
 
+    
+
 
     public void playWord(player player, Board gameboard, Bag bag){
         System.out.println("Enter word:");
@@ -420,6 +422,9 @@ public class Scrabble{
             playWord(player, gameboard, bag);
             tallyWord(orientation, word, start, gameboard, player, bag);
         }
+        else {
+            throw new IllegalArgumentException(); // FIXME add new InvalidWordException
+        }
     }
 
     //TODO TURN
@@ -430,16 +435,21 @@ public class Scrabble{
         switch(choice){
             case 1:
                 playWord(player, gameboard, bag);
+                player.setPassNum(0);
             case 2:
                 exchangetiles(player, bag);
+                player.setPassNum(0);
                 break;
             case 3:
-              break;
+                player.setPassNum(player.getPassNum() + 1);
+                break;
             default:
                 throw new IllegalArgumentException(); //FIXME add ChoiceOutofBoundsException
-
         }
-
+        if (bag.getContents().size() > 0){
+            player.drawDeck(gameboard, bag);
+        }
+        
     }
 
     public static void main(String[] args) {

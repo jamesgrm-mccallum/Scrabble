@@ -1,5 +1,6 @@
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 class Bag {
     HashMap<String, Integer> values = new HashMap<String, Integer>();
@@ -60,8 +61,11 @@ class Bag {
 
     public void generateContents(){
         ArrayList<String> alpha = Scrabble.toStringArray("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        int[] values = {1};
         for (String letter : alpha){
-            
+            if (letter.equals("A")){
+
+            }
         }
     }
 

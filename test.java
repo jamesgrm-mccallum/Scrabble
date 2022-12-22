@@ -48,11 +48,8 @@ public class test {
         
     }
     public static void main(String[] args) {
-        String deckString = "";
-        for (Piece piece : deck){
-            deckString += piece.getLetter().toUpperCase();
-            deckString += " ";
+        for (int i = 0; i < 1; i++){
+            System.out.println("hello");
         }
-        return "[" + deckString + "]";
     }
 }
