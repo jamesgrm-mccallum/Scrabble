@@ -341,11 +341,11 @@ public class Scrabble{
     }
 
     
-
+    //TODO menu method
     public void playerMenu(player player, Board gameboard){
         System.out.println(player.getName() + "\'s turn!" );
         System.out.println(player.deckToString());
-        
+        System.out.println("\n1. Play\n2. Exchange\n3. Pass");
 
     }
 
@@ -405,7 +405,42 @@ public class Scrabble{
         }
     }
 
+
+    public void playWord(player player, Board gameboard, Bag bag){
+        System.out.println("Enter word:");
+        String word = getInput();
+
+        System.out.println("Enter Orientation (vertical/horizontal):");
+        String orientation = getInput();
+
+        System.out.println("Enter start Coordinate: ");
+        Coordinate start = Coordinate.translateString(getInput());
+
+        if (validateInput(word, orientation, start, player, gameboard)){
+            playWord(player, gameboard, bag);
+            tallyWord(orientation, word, start, gameboard, player, bag);
+        }
+    }
+
     //TODO TURN
+
+    public void turn(player player, Board gameboard, Bag bag)throws IllegalArgumentException{
+        playerMenu(player, gameboard);
+        int choice = Integer.valueOf(getInput());
+        switch(choice){
+            case 1:
+                playWord(player, gameboard, bag);
+            case 2:
+                exchangetiles(player, bag);
+                break;
+            case 3:
+              break;
+            default:
+                throw new IllegalArgumentException(); //FIXME add ChoiceOutofBoundsException
+
+        }
+
+    }
 
     public static void main(String[] args) {
         // TODO MAIN

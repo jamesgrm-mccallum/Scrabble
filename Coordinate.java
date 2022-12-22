@@ -1,4 +1,4 @@
-
+import java.util.ArrayList;
 
 class Coordinate {
     private int x;
@@ -32,6 +32,24 @@ class Coordinate {
         else{
             return false;
         }
+    }
+
+    public static Coordinate translateString(String expr) throws IllegalArgumentException{
+        int x = 0;
+        int y = Integer.valueOf(expr.substring(1));
+        ArrayList<String> alpha = Scrabble.toStringArray("ABCDEFGHIJKLMNO");
+        if (expr.matches("(A-Z][0-9])")){ //FIXME regex doesn't work
+            for (int i = 0; i < alpha.size(); i++){
+                if (expr.substring(0, 1).equals(alpha.get(i))){
+                    x = i;
+                    break;
+                }
+            }
+        }
+        else {
+            throw new IllegalArgumentException();
+        }
+        return new Coordinate(x, y);
     }
 
 }
