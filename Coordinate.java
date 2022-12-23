@@ -24,6 +24,10 @@ class Coordinate {
     public void setY(int y) {
         this.y = y;
     }
+    
+    public String toString(){
+        return "(" + String.valueOf(x) + ", " + String.valueOf(y) + ")";
+    }
 
     public boolean equals(Coordinate other){
         if (x == other.getX() && y == other.getY()){
@@ -38,7 +42,7 @@ class Coordinate {
         int x = 0;
         int y = Integer.valueOf(expr.substring(1));
         ArrayList<String> alpha = Scrabble.toStringArray("ABCDEFGHIJKLMNO");
-        if (expr.matches("(A-Z][0-9])")){ //FIXME regex doesn't work
+        if (expr.matches("[A-Z][0-9]")){ //FIXME regex doesn't work
             for (int i = 0; i < alpha.size(); i++){
                 if (expr.substring(0, 1).equals(alpha.get(i))){
                     x = i;
@@ -47,7 +51,7 @@ class Coordinate {
             }
         }
         else {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Enter Coordinate format Invalid");
         }
         return new Coordinate(x, y);
     }

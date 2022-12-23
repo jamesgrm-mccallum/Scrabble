@@ -4,7 +4,7 @@ import java.util.ArrayList;
 class Board {
     private Tile[][] gameBoard;
 
-    private Board(){
+    public Board(){
         // [ROW][COL]
         gameBoard = new Tile[15][15];
     }
@@ -132,21 +132,5 @@ class Board {
         
         return accum;
     }
-    public static void main(String[] args) {
-        Board gameBoard = new Board();
-        gameBoard.generateBoard();
-        System.out.println(gameBoard);
-        Coordinate start = new Coordinate(3, 3);
-        ArrayList<Piece> letters = new ArrayList<Piece>();
-        letters.add(new Piece("H"));
-        letters.add(new Piece("E"));
-        letters.add(new Piece("L"));
-        letters.add(new Piece("L"));
-        letters.add(new Piece("O"));
-        letters.add(new Piece("O"));
-        
-        player player1 = new player(0, "James", 0, letters);
-        Scrabble.placeWord("hello", "vertical", start, player1, gameBoard);
-        System.out.println(gameBoard);
-    }
+    
 }

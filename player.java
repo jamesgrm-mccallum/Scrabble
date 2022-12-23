@@ -65,7 +65,7 @@ class player {
         Random rand = new Random();
         int difference = 7 - deck.size();
         for (int i = 0; i < difference; i++){
-            int piece = rand.nextInt(i);
+            int piece = rand.nextInt(0, bag.getContents().size());
             deck.add(bag.getContents().get(piece));
             bag.getContents().remove(piece);
         }
