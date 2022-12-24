@@ -48,8 +48,9 @@ public class test {
         
     }
     public static void main(String[] args) {
-        if ("SATVREO".contains("SAT")){
-            System.out.println("YES");
-        }
+        String string="whatever";
+        String reverse = new StringBuffer(string).reverse().toString();
+        System.out.println(reverse);
+
     }
 }
