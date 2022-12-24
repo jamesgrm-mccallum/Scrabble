@@ -45,7 +45,7 @@ class Coordinate {
         if (expr.matches("[A-Z][0-9]")){ //FIXME regex doesn't work
             for (int i = 0; i < alpha.size(); i++){
                 if (expr.substring(0, 1).equals(alpha.get(i))){
-                    x = i;
+                    x = i + 1;
                     break;
                 }
             }
