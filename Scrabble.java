@@ -275,47 +275,34 @@ public class Scrabble{
     //place word returns void
     //takes in String word, String orientation, Coordinate starting_pos, String player
     //places down a word
-    public static void placeWord(String word, String orientation, Coordinate start, player player, Board gameboard)throws IllegalArgumentException{
+    public static void placeWord(String word, String orientation, Coordinate start, player player, Board gameboard)throws InvalidOrientationException{
 
-        ArrayList<String> wordList = new ArrayList<String>(Arrays.asList(word.split("")));
         boolean hasRemoved = false;
-        
-        if (orientation.equals("vertical")){
-            int i = start.getY();
-            for (String letter : wordList){
-                hasRemoved = false;
-                gameboard.getTile()[i][start.getX()].setPiece(new Piece(letter));
-                
-                for (Iterator<Piece> it = player.getDeck().iterator(); it.hasNext();) {
-                    Piece p = it.next();
-                    if (p.getLetter().equals(letter.toUpperCase()) && hasRemoved == false) {
-                        it.remove();
-                        hasRemoved = true;
-                    }
+
+        int row = start.getY();
+        int col = start.getX();
+
+        for (String letter : toStringArray(word)){
+            hasRemoved = false;
+            gameboard.getTile()[row][col].setPiece(new Piece(letter));
+
+            for (Iterator<Piece> it = player.getDeck().iterator(); it.hasNext();) {
+                Piece p = it.next();
+                if (p.getLetter().equals(letter.toUpperCase()) && hasRemoved == false) {
+                    it.remove();
+                    hasRemoved = true;
                 }
-                i++;
-           }  
-        }
-        
-        else if (orientation.equals("horizontal")){
-            int i = start.getX();
-            for (String letter : wordList){
-                
-                gameboard.getTile()[start.getY()][i].setPiece(new Piece(letter));
-                System.out.println(gameboard.getTile()[start.getY() - 1][i - 1].getPiece());
-                for (Iterator<Piece> it = player.getDeck().iterator(); it.hasNext();) {
-                    Piece p = it.next();
-                    if (p.getLetter().toUpperCase().equals(letter.toUpperCase()) && hasRemoved == false) {
-                        it.remove();
-                        hasRemoved = true;
-                    }
-                }
-                
-                i++;
-           }  
-        }
-        else{
-            throw new IllegalArgumentException("Orientation must be either horizontal or vertical");
+            }
+
+            if (orientation.equals("vertical")){
+                row ++;
+            }
+            else if (orientation.equals("horizontal")){
+                col ++;
+            }
+            else{
+                throw new InvalidOrientationException();
+            }
         }
     }
     
@@ -328,66 +315,46 @@ public class Scrabble{
     } 
     
     //tallyWord
-    public static int  tallyWord(String orientation, String word, Coordinate start, Board gameboard, player player, Bag bag){
+    public static int tallyWord(String orientation, String word, Coordinate start, Board gameboard, player player, Bag bag){
         int word_score = 0;
         int lettermultiplier = 1;
-        int mulitplier = 1;
+        int wordmultiplier = 1;
 
-        if (orientation.equals("vertical")){
-            int i = start.getY();
-            for (String letter : toStringArray(word)){
-                Tile currentTile = gameboard.getTile()[i][start.getX()];
-                if (currentTile.getType() != null){
-                    if (currentTile.getType() == "2L"){
-                        lettermultiplier = 2;
-                    }
-                    else if (currentTile.getType() == "2W"){
-                        mulitplier = mulitplier * 2;
-                    }
-                    else if(currentTile.getType() == "3L"){
-                        lettermultiplier = 3;
-                    }
-                    else {
-                        mulitplier = mulitplier * 3;
-                    }
+        int row = start.getY();
+        int col = start.getX();
+
+        for (String letter : toStringArray(word)){
+            Tile currentTile = gameboard.getTile()[row][col];
+            if (currentTile.getType() != null){
+                if (currentTile.getType() == "2L"){
+                    lettermultiplier = 2;
                 }
-                word_score += bag.getValues().get(letter.toUpperCase()) * lettermultiplier;
-                lettermultiplier = 1;
-                i ++;
-            }
-        }
-        else if(orientation.equals("horizontal")){
-            int i = start.getX();
-            for (String letter : toStringArray(word)){
-                Tile currentTile = gameboard.getTile()[start.getY()][i];
-                if (currentTile.getType() != null){
-                    if (currentTile.getType() == "2L"){
-                        lettermultiplier = 2;
-                    }
-                    else if (currentTile.getType() == "2W"){
-                        mulitplier = mulitplier * 2;
-                    }
-                    else if(currentTile.getType() == "3L"){
-                        lettermultiplier = 3;
-                    }
-                    else {
-                        mulitplier = mulitplier * 3;
-                    }
+                else if (currentTile.getType() == "2W"){
+                    wordmultiplier = wordmultiplier * 2;
                 }
-                word_score += bag.getValues().get(letter.toUpperCase()) * lettermultiplier;
-                lettermultiplier = 1;
-                i++;
+                else if(currentTile.getType() == "3L"){
+                    lettermultiplier = 3;
+                }
+                else {
+                    wordmultiplier = wordmultiplier * 3;
+                }
             }
-        }
-        else {
-            throw new IllegalArgumentException();
+            word_score += bag.getValues().get(letter.toUpperCase()) * lettermultiplier;
+            lettermultiplier = 1;
+
+            if (orientation.equals(("vertical"))){
+                row ++;
+            }
+            else if (orientation.equals("horizontal")){
+                col++;
+            }
         }
 
         if (word.length() == 7){
             word_score += 50;
         }
         
-        return word_score * mulitplier;
+        return word_score * wordmultiplier;
     }
 
     public Coordinate getStartFromLetter(String word, String orientation, String letter, Coordinate letterCord, Board gameboard){
