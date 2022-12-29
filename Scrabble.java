@@ -375,24 +375,32 @@ public class Scrabble{
     //tallyPlay
     public int tallyPlay(String word, Coordinate start, String orientation, player player, Board gameboard, Bag bag){
         int playScore = 0;
-        if (orientation.equals("vertical")){
-            int i = start.getY();
-            for (String letter : toStringArray(word)){
-                Coordinate letterCord = new Coordinate(start.getX(), start.getY() + (i - start.getY()));
-                String[] connections = findConnections(letter , getStartFromLetter(word, orientation, letter, letterCord, gameboard), orientation, player, gameboard);
-                playScore += tallyWord(orientation, connections[0], start, gameboard, player, bag);
-                i++;
+
+        int row = start.getY();
+        int col = start.getX();
+
+        for (String letter : toStringArray(orientation)){
+            Coordinate letterCord = new Coordinate(col, row);
+            String[] connections = findConnections(letter, getStartFromLetter(word, orientation, letter, letterCord, gameboard), orientation, player, gameboard);
+            if (orientation.equals("vertical")){
+                if (row == (start.getY() + word.length())){
+                    playScore += tallyWord(orientation, connections[0], start, gameboard, player, bag);
+                    playScore += tallyWord(orientation, connections[1], start, gameboard, player, bag);
+                }
+                else {
+                    playScore += tallyWord(orientation, connections[0], start, gameboard, player, bag);
+                }
             }
-        }
-        else if (orientation.equals("horizontal")){
-            int i = start.getX();
-            for (String letter : toStringArray(word)){
-                Coordinate letterCord = new Coordinate(start.getX() + (i - start.getX()), start.getY());
-                String[] connections = findConnections(letter , getStartFromLetter(word, orientation, letter, letterCord, gameboard), orientation, player, gameboard);
-                playScore += tallyWord(orientation, connections[1], start, gameboard, player, bag);
-                i++;
+            else if(orientation.equals("horizontal")){
+                if (col == (start.getX() + word.length())){
+                    playScore += tallyWord(orientation, connections[0], start, gameboard, player, bag);
+                    playScore += tallyWord(orientation, connections[1], start, gameboard, player, bag);
+                }
+                else {
+                    playScore += tallyWord(orientation, connections[1], start, gameboard, player, bag);
+                }
             }
-        }
+        }   
 
         return playScore;
     }
