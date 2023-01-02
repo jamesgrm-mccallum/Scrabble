@@ -335,7 +335,7 @@ public class Scrabble{
                 else if(currentTile.getType() == "3L"){
                     lettermultiplier = 3;
                 }
-                else {
+                else if (currentTile.getType() == "3W"){
                     wordmultiplier = wordmultiplier * 3;
                 }
             }
@@ -357,32 +357,53 @@ public class Scrabble{
         return word_score * wordmultiplier;
     }
 
-    public Coordinate getStartFromLetter(String word, String orientation, String letter, Coordinate letterCord, Board gameboard){
-        ArrayList<String> wordAsList = toStringArray(word);
-        int letterIndex = wordAsList.indexOf(letter);
+    public static Coordinate getStartFromLetter(String word, String orientation, String letter, Coordinate letterCord, Board gameboard){
+        System.out.println(letterCord);
+        int col = letterCord.getX();
+        int row = letterCord.getY();
 
         if (orientation.equals("vertical")){
-            return new Coordinate(letterCord.getX(), letterCord.getY() - letterIndex);
+            while (gameboard.getTile()[row][col].getPiece() != null && row >= 0){
+                row--;
+            }
+            return new Coordinate(col, row + 1);
         }
-        else if (orientation.equals("horizontal")){
-            return new Coordinate(letterCord.getX() - letterIndex, letterCord.getY());
+        else{
+            while (gameboard.getTile()[row][col] != null && col >= 0){
+                col--;
+            }
+            return new Coordinate(col + 1, row);
         }
-        else {
-            throw new IllegalArgumentException();
+    }
+
+    public static String oppositeOrientation(String orientation){
+        if (orientation.equals("vertical")){
+            return "horizontal";
+        }
+        else{
+            return "vertical";
         }
     }
 
     //tallyPlay
-    public int tallyPlay(String word, Coordinate start, String orientation, player player, Board gameboard, Bag bag){
+    public static int tallyPlay(String word, Coordinate start, String orientation, player player, Board gameboard, Bag bag){
         int playScore = 0;
 
         int row = start.getY();
         int col = start.getX();
 
-        for (String letter : toStringArray(orientation)){
+        for (String letter : toStringArray(word)){
             Coordinate letterCord = new Coordinate(col, row);
-            String[] connections = findConnections(letter, getStartFromLetter(word, orientation, letter, letterCord, gameboard), orientation, player, gameboard);
+            String[] connections;
+            
             if (orientation.equals("vertical")){
+                if (row - start.getY() == word.length()){
+                    connections = findConnections(letter, getStartFromLetter(word, oppositeOrientation(orientation), letter, letterCord, gameboard), "last", player, gameboard);
+                }
+                else{
+                    connections = findConnections(letter, getStartFromLetter(word, oppositeOrientation(orientation), letter, letterCord, gameboard), orientation, player, gameboard);
+                }
+                
                 if (row == (start.getY() + word.length())){
                     playScore += tallyWord(orientation, connections[0], start, gameboard, player, bag);
                     playScore += tallyWord(orientation, connections[1], start, gameboard, player, bag);
@@ -390,15 +411,24 @@ public class Scrabble{
                 else {
                     playScore += tallyWord(orientation, connections[0], start, gameboard, player, bag);
                 }
+                row++;
             }
             else if(orientation.equals("horizontal")){
-                if (col == (start.getX() + word.length())){
+                if (col - word.length() == start.getX() - 1){
+                    connections = findConnections(letter, getStartFromLetter(word, oppositeOrientation(orientation), letter, letterCord, gameboard), "last", player, gameboard);
+                }
+                else {
+                    connections = findConnections(letter, getStartFromLetter(word, oppositeOrientation(orientation), letter, letterCord, gameboard), orientation, player, gameboard);
+                }
+                if (col - word.length() == start.getX() - 1){
                     playScore += tallyWord(orientation, connections[0], start, gameboard, player, bag);
+
                     playScore += tallyWord(orientation, connections[1], start, gameboard, player, bag);
                 }
                 else {
                     playScore += tallyWord(orientation, connections[1], start, gameboard, player, bag);
                 }
+                col++;
             }
         }   
 
@@ -488,7 +518,8 @@ public class Scrabble{
             
             if (validateInput(word, orientation, start, player, gameboard)){
                 placeWord(word, orientation, start, player, gameboard);
-                tallyWord(orientation, word, start, gameboard, player, bag);
+                System.out.printf("That play was worth %s points!", Integer.toString(tallyPlay(word, start, orientation, player, gameboard, bag)));
+                player.setPoints(player.getPoints() + tallyPlay(word, start, orientation, player, gameboard, bag));
             }
         } 
         catch (WordNotFoundException e){
@@ -525,7 +556,7 @@ public class Scrabble{
                 player.setPassNum(player.getPassNum() + 1);
                 break;
             default:
-                throw new IllegalArgumentException(); //FIXME add ChoiceOutofBoundsException
+                throw new IllegalArgumentException(); //TODO add ChoiceOutofBoundsException
         }
         if (bag.getContents().size() > 0){
             player.drawDeck(gameboard, bag);

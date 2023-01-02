@@ -42,7 +42,7 @@ class Coordinate {
         int x = 0;
         int y = Integer.valueOf(expr.substring(1));
         ArrayList<String> alpha = Scrabble.toStringArray("ABCDEFGHIJKLMNO");
-        if (expr.matches("[A-Z][0-9][0-9]*")){ //FIXME regex doesn't work
+        if (expr.matches("[A-Z][0-9][0-9]*")){ 
             for (int i = 0; i < alpha.size(); i++){
                 if (expr.substring(0, 1).equals(alpha.get(i))){
                     x = i + 1;
