@@ -506,37 +506,44 @@ public class Scrabble{
 
 
     public static void playWord(player player, Board gameboard, Bag bag){
-        try {
-            System.out.println("Enter word:");
-            String word = getInput();
-
-            System.out.println("Enter Orientation (vertical/horizontal):");
-            String orientation = getInput();
-
-            System.out.println("Enter start Coordinate: ");
-            Coordinate start = Coordinate.translateString(getInput());
-            
-            if (validateInput(word, orientation, start, player, gameboard)){
-                placeWord(word, orientation, start, player, gameboard);
-                System.out.printf("That play was worth %s points!", Integer.toString(tallyPlay(word, start, orientation, player, gameboard, bag)));
-                player.setPoints(player.getPoints() + tallyPlay(word, start, orientation, player, gameboard, bag));
+        while (true){
+            try {
+                System.out.println("Enter word:");
+                String word = getInput();
+    
+                System.out.println("Enter Orientation (vertical/horizontal):");
+                String orientation = getInput();
+    
+                System.out.println("Enter start Coordinate: ");
+                Coordinate start = Coordinate.translateString(getInput());
+                
+                if (validateInput(word, orientation, start, player, gameboard)){
+                    placeWord(word, orientation, start, player, gameboard);
+                    System.out.printf("That play was worth %s points!", Integer.toString(tallyPlay(word, start, orientation, player, gameboard, bag)));
+                    player.setPoints(player.getPoints() + tallyPlay(word, start, orientation, player, gameboard, bag));
+                }
+                break;
+            } 
+            catch (WordNotFoundException e){
+                System.out.println("Word not found within dictionary!");
             }
-        } 
-        catch (WordNotFoundException e){
-            System.out.println("Word not found within dictionary!");
+            catch (WordNotWithinRangeException e){
+                System.out.println("Word is outside of board bounds!");
+            }
+            catch (InvalidOrientationException e){
+                System.out.println("Word orientation must be either vertical or horizontal!");
+            }
+            catch (WordNotInDeckException e){
+                System.out.println("Word is not in Deck!");
+            }
+            catch (InvalidConnectionException e){
+                System.out.println("Word has invalid connections!");
+            }
+            catch(InvalidCoordinateException e){
+                System.out.println("Invalid Coordinate!");
+            }
         }
-        catch (WordNotWithinRangeException e){
-            System.out.println("Word is outside of board bounds!");
-        }
-        catch (InvalidOrientationException e){
-            System.out.println("Word orientation must be either vertical or horizontal!");
-        }
-        catch (WordNotInDeckException e){
-            System.out.println("Word is not in Deck!");
-        }
-        catch (InvalidConnectionException e){
-            System.out.println("Word has invalid connections!");
-        }
+        
     }
 
 

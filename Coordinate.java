@@ -38,22 +38,24 @@ class Coordinate {
         }
     }
 
-    public static Coordinate translateString(String expr) throws IllegalArgumentException{
-        int x = 0;
-        int y = Integer.valueOf(expr.substring(1));
+    public static Coordinate translateString(String expr) throws InvalidCoordinateException{
         ArrayList<String> alpha = Scrabble.toStringArray("ABCDEFGHIJKLMNO");
         if (expr.matches("[A-Z][0-9][0-9]*")){ 
+            int x = 0;
+            int y = Integer.valueOf(expr.substring(1));
             for (int i = 0; i < alpha.size(); i++){
                 if (expr.substring(0, 1).equals(alpha.get(i))){
                     x = i + 1;
                     break;
                 }
+                
             }
+            return new Coordinate(x - 1, y - 1);
         }
         else {
-            throw new IllegalArgumentException("Enter Coordinate format Invalid"); // TODO InvalidCoordinateException
+            throw new InvalidCoordinateException();
         }
-        return new Coordinate(x - 1, y - 1);
+        
     }
 
 }
