@@ -1,5 +1,7 @@
 class Piece {
     String letter;
+    
+
 
     public Piece(String letter){
         this.letter = letter.toUpperCase();

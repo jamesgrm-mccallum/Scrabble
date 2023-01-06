@@ -369,7 +369,7 @@ public class Scrabble{
             return new Coordinate(col, row + 1);
         }
         else{
-            while (gameboard.getTile()[row][col] != null && col >= 0){
+            while (gameboard.getTile()[row][col].getPiece() != null && col >= 0){
                 col--;
             }
             return new Coordinate(col + 1, row);

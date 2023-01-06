@@ -2,6 +2,9 @@ class Tile {
     Coordinate location;
     String type;
     Piece piece;
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_RESET = "\u001B[0m";
+
     
     public Tile(Coordinate location, String type, Piece piece) {
         this.location = location;
@@ -30,7 +33,7 @@ class Tile {
 
     public String toString(){
         if (piece != null){
-            return piece.getLetter();
+            return ANSI_YELLOW  + piece.getLetter() + ANSI_RESET;
         }
         else if (type != null){
             if (type.equals("2L")){
