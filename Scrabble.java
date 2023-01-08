@@ -16,27 +16,6 @@ public class Scrabble{
     //TODO comment code
 
     // checks to see if word in word list
-    public static boolean isWord(String word){
-        
-        try{
-            File file = new File("words.txt");
-            Scanner input = new Scanner(file);
-            while (input.hasNextLine()){
-                String fileWord = input.nextLine();
-                if (fileWord.toUpperCase().equals(word.toUpperCase())){
-                    return true;
-                }
-            }
-            input.close();
-        }
-        catch (FileNotFoundException e){
-            System.out.println("File not found!");
-            
-        }
-        return false;
-
-    }
-
     private static String getInput(){
         
             //Variable for storing input
@@ -46,231 +25,6 @@ public class Scrabble{
             return userInput;
     }
 
-
-    public static String[] findConnections(String letter, Coordinate letterCord, String orientation, player player, Board gameboard){
-        String wordVertical = "";
-        String wordHorizontal = "";
-        String right = "";
-        String left = "";
-        String up = "";
-        String down = "";
-        
-        if (orientation.equals("vertical") || orientation.equals("last")){
-            if (gameboard.getTile()[letterCord.getY()][letterCord.getX() - 1].getPiece() != null){
-                int decreaseCord = 1;
-                while (gameboard.getTile()[letterCord.getY()][letterCord.getX() - decreaseCord].getPiece() != null && letterCord.getX() - decreaseCord >= 0){
-                    left += gameboard.getTile()[letterCord.getY()][letterCord.getX() - decreaseCord].getPiece().getLetter();
-                    decreaseCord ++;
-                }
-            }
-            //getting the right below the letter
-            if (gameboard.getTile()[letterCord.getY()][letterCord.getX() + 1].getPiece() != null){
-                int increaseCord = 1;
-                while (gameboard.getTile()[letterCord.getY()][letterCord.getX() + increaseCord].getPiece() != null && letterCord.getX() + increaseCord <= 14){
-                    right += gameboard.getTile()[letterCord.getY()][letterCord.getX() + increaseCord].getPiece().getLetter();
-                    increaseCord ++;
-                }
-            }
-        }
-        if (orientation.equals("horizontal") || orientation.equals("last")){
-            //getting the letters to the top of the letter
-            if (gameboard.getTile()[letterCord.getY() - 1][letterCord.getX()].getPiece() != null){
-                int leftCord = 1;
-                while(gameboard.getTile()[letterCord.getY() - leftCord][letterCord.getX()].getPiece() != null && letterCord.getY() - leftCord >= 0){
-                    up += gameboard.getTile()[letterCord.getY() - leftCord][letterCord.getX()].getPiece().getLetter();
-                    leftCord ++;
-                }
-            }
-            //getting the letters to the bottum of the letter
-            if (gameboard.getTile()[letterCord.getY() + 1][letterCord.getX()].getPiece() != null){
-                int rightCord = 1;
-                while(gameboard.getTile()[letterCord.getY() + rightCord][letterCord.getX()].getPiece() != null && letterCord.getY() + rightCord <= 14){
-                    down += gameboard.getTile()[letterCord.getY() + rightCord][letterCord.getX()].getPiece().getLetter();
-                    rightCord ++;
-                }
-            }
-        }
-
-        //Compiling words and checking if they are in dictionary
-
-        if (up.length() > 0 || down.length() > 0){
-            wordVertical = new StringBuffer(up).reverse().toString() + letter + down;
-        }
-        if (left.length() > 0 || right.length() > 0){
-            wordHorizontal = new StringBuffer(left).reverse().toString() + letter + right;
-        }
-        
-
-        return new String[]{wordVertical, wordHorizontal};
-    }
-
-
-    public static boolean validateConnection(String letter, Coordinate letterCord, String orientation, player player, Board gameboard){
-        String[] connections = findConnections(letter, letterCord, orientation, player, gameboard);
-        int trues = 0;
-
-        if (connections[0].length() > 0){
-            if (isWord(connections[0])){
-                trues ++;
-            }
-        }
-        else {
-            trues++;
-        }
-
-        if (connections[1].length() > 0){
-            if (isWord(connections[1])){
-                trues ++;
-            }
-        }
-        else {
-            trues++;
-        }
-        
-        if (trues == 2){
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
-    public static Integer validLetter(String word, String orientation, Coordinate start, player player, Board gameboard){
-        int iterations = 0;
-        int row = start.getY();
-        int col = start.getX();
-        String accum = "";
-
-        
-
-        while (iterations < word.length()){
-            Piece current_piece = gameboard.getTile()[row][col].getPiece();
-            System.out.println(current_piece);
-            if (current_piece == null){
-                accum += " ";
-            }
-            else {
-                accum += current_piece.getLetter();
-            }
-
-            if (orientation.equals("vertical")){
-                row++;
-            }
-            else {
-                col++;
-            }
-            iterations ++;
-        }
-
-
-        int correct = 0;
-        ArrayList<String> wordList = new ArrayList<String>(Arrays.asList(word.split("")));
-        ArrayList<String> deckList = new ArrayList<String>();
-        for (Piece p: player.getDeck()){
-            deckList.add(p.getLetter());
-        }
-        String deckString = String.join("", deckList);
-        ArrayList<String> accumList = new ArrayList<String>(Arrays.asList(accum.split("")));
-        
-
-        
-        for (int i = 0; i < wordList.size(); i++){
-            for (int x = 0; x < deckList.size(); x ++){
-                if (wordList.get(i).equalsIgnoreCase(accumList.get(i))){
-                    correct ++;
-                    x = deckList.size();
-                }
-                else if (wordList.get(i).equalsIgnoreCase(deckList.get(x))){
-                    deckList.remove(x);
-                    correct ++;
-                    x = deckList.size();
-                }
-                
-                if (! deckString.contains(wordList.get(i)) && accum.contains(wordList.get(i))){
-                    if (deckList.contains(".")){
-                        deckList.remove(deckList.indexOf("."));
-                        correct++;
-                    }
-                }
-            }
-        }
-
-        return correct;
-        
-    }
-
-    //validate word returns boolean
-    //takes in: String word, String orientation, Coordinate starting pos, String player
-    //checks to see if a word is a real word, player has correct pieces for word, word can fit on board
-
-    public static boolean validateInput(String word, String direction, Coordinate start, player player, Board gameboard)throws IllegalArgumentException, WordNotWithinRangeException, WordNotFoundException, InvalidOrientationException, WordNotInDeckException, InvalidConnectionException{
-        // checks that word is a word in the dictionary
-        if (isWord(word)){
-            ArrayList<String> wordList = new ArrayList<String>(Arrays.asList(word.split("")));
-            //Checks that the word has the correct pieces to be placed
-            if (validLetter(word, direction, start, player, gameboard) == word.length()){
-                //Checks that start point is within board
-                if (start.getX() <= 14 && start.getX() >= 0 && start.getY() <= 14 && start.getY() >= 0){
-                    // logic for getting endpoint of word
-                    Coordinate endPoint;
-
-                    if (direction.equals("vertical")){
-                        endPoint = new Coordinate(start.getX(), start.getY() + word.length());
-                    }
-                    else if (direction.equals("horizontal")){
-                        endPoint = new Coordinate(start.getX() + word.length(), start.getY());
-                    }
-                    else {
-                        throw new InvalidOrientationException();
-                    }
-
-                    //Checks that end point is within board
-                    if (endPoint.getX() <= 14 && endPoint.getX() >= 0 && endPoint.getY() <= 14 && endPoint.getY() >= 0){
-                        if (direction.equals("vertical")){
-                            int i = start.getY();
-                            for (String letter : wordList){
-                                if (i - start.getY() == word.length()){
-                                    if (!validateConnection(letter, new Coordinate(start.getX(), i), "last", player, gameboard)){
-                                        throw new InvalidConnectionException();
-                                    }
-                                }
-                                else {
-                                    if (!validateConnection(letter, new Coordinate(start.getX(), i), direction, player, gameboard)){
-                                        throw new InvalidConnectionException();
-                                    }
-                                }
-                                
-                                i++;
-                            }
-                        }
-                        else {
-                            int i = start.getX();
-                            for (String letter : wordList){
-                                if (!validateConnection(letter, new Coordinate(i, start.getY()), direction, player, gameboard)){
-                                    throw new InvalidConnectionException();
-                                }
-                                i++;
-                            }
-                        }
-                        return true;
-                    }
-                    else{
-                        throw new WordNotWithinRangeException();
-                    }
-                }
-                else{
-                    throw new WordNotWithinRangeException();
-                }
-            }
-            else {
-                throw new WordNotInDeckException();
-            }
-
-        }
-        else {
-            throw new WordNotFoundException();
-        }
-    }
 
     //place word returns void
     //takes in String word, String orientation, Coordinate starting_pos, String player
@@ -398,10 +152,10 @@ public class Scrabble{
             
             if (orientation.equals("vertical")){
                 if (row - start.getY() == word.length()){
-                    connections = findConnections(letter, getStartFromLetter(word, oppositeOrientation(orientation), letter, letterCord, gameboard), "last", player, gameboard);
+                    connections = Validator.findConnections(letter, getStartFromLetter(word, oppositeOrientation(orientation), letter, letterCord, gameboard), "last", player, gameboard);
                 }
                 else{
-                    connections = findConnections(letter, getStartFromLetter(word, oppositeOrientation(orientation), letter, letterCord, gameboard), orientation, player, gameboard);
+                    connections = Validator.findConnections(letter, getStartFromLetter(word, oppositeOrientation(orientation), letter, letterCord, gameboard), orientation, player, gameboard);
                 }
                 
                 if (row == (start.getY() + word.length())){
@@ -415,10 +169,10 @@ public class Scrabble{
             }
             else if(orientation.equals("horizontal")){
                 if (col - word.length() == start.getX() - 1){
-                    connections = findConnections(letter, getStartFromLetter(word, oppositeOrientation(orientation), letter, letterCord, gameboard), "last", player, gameboard);
+                    connections = Validator.findConnections(letter, getStartFromLetter(word, oppositeOrientation(orientation), letter, letterCord, gameboard), "last", player, gameboard);
                 }
                 else {
-                    connections = findConnections(letter, getStartFromLetter(word, oppositeOrientation(orientation), letter, letterCord, gameboard), orientation, player, gameboard);
+                    connections = Validator.findConnections(letter, getStartFromLetter(word, oppositeOrientation(orientation), letter, letterCord, gameboard), orientation, player, gameboard);
                 }
                 if (col - word.length() == start.getX() - 1){
                     playScore += tallyWord(orientation, connections[0], start, gameboard, player, bag);
@@ -504,8 +258,7 @@ public class Scrabble{
     }
     
 
-
-    public static void playWord(player player, Board gameboard, Bag bag){
+    public static void playWord(player player, Board gameboard, Bag bag, boolean isFirstTurn){
         while (true){
             try {
                 System.out.println("Enter word:");
@@ -517,13 +270,16 @@ public class Scrabble{
                 System.out.println("Enter start Coordinate: ");
                 Coordinate start = Coordinate.translateString(getInput());
                 
-                if (validateInput(word, orientation, start, player, gameboard)){
+                if (Validator.validateInput(word, orientation, start, player, gameboard, isFirstTurn)){
                     placeWord(word, orientation, start, player, gameboard);
                     System.out.printf("That play was worth %s points!", Integer.toString(tallyPlay(word, start, orientation, player, gameboard, bag)));
                     player.setPoints(player.getPoints() + tallyPlay(word, start, orientation, player, gameboard, bag));
                 }
                 break;
             } 
+            catch(WordNotConnected e){
+                System.out.println("Word is not connected!");
+            }
             catch (WordNotFoundException e){
                 System.out.println("Word not found within dictionary!");
             }
@@ -547,12 +303,12 @@ public class Scrabble{
     }
 
 
-    public static void turn(player player, Board gameboard, Bag bag)throws IllegalArgumentException{
+    public static void turn(player player, Board gameboard, Bag bag, boolean isFirstTurn)throws IllegalArgumentException{
         playerMenu(player, gameboard);
         int choice = Integer.valueOf(getInput());
         switch(choice){
             case 1:
-                playWord(player, gameboard, bag);
+                playWord(player, gameboard, bag, isFirstTurn);
                 player.setPassNum(0);
                 break;
             case 2:
@@ -584,21 +340,22 @@ public class Scrabble{
         gameboard.generateBoard();
         bag.generateContents();
         bag.generateValues();
-        System.out.println(bag.getValues());
         player1.drawDeck(gameboard, bag);
         player2.drawDeck(gameboard, bag);
 
         boolean isPlayerOneTurn = true;
+        boolean isFirstTurn = true;
+
         while (player1.getPassNum() < 2 && player2.getPassNum() < 2){
             if (isPlayerOneTurn){
-                turn(player1, gameboard, bag);
+                turn(player1, gameboard, bag, isFirstTurn);
                 isPlayerOneTurn = false;
             }
             else {
-                turn(player2, gameboard, bag);
+                turn(player2, gameboard, bag, isFirstTurn);
                 isPlayerOneTurn = true;
             }
+            isFirstTurn = false;
         }
-
     }
 }
