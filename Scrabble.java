@@ -1,3 +1,30 @@
+/* 
+ * PROJECT: CHECKERS
+ * CREATED BY: JAMES MCCALLUM
+ * FILES:
+ *  - Bag.java
+ *  - Board.java
+ *  - ChoiceOutofBoundsException.java
+ *  - Coordinate.java
+ *  - highscore.txt
+ *  - InvalidConnectionException.java
+ *  - InvalidCoordinateException.java
+ *  - InvalidOrienationException.java
+ *  - NotOnStarException.java
+ *  - Piece.java
+ *  - player.java
+ *  - Scorer.java
+ *  - Scrabble.java
+ *  - Scrabble.pdf
+ *  - Tile,java
+ *  - Validator.java
+ *  - WordAlreadyUsedException.java
+ *  - WordNotConnectedException.java
+ *  - WordNotFoundException.java
+ *  - WordNotInDeckException.java
+ *  - WordNotWithinrangeException.java
+ */
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.io.File;
@@ -8,13 +35,20 @@ import java.io.IOException;
 import java.util.Random;
 import java.util.HashMap;
 
+/**
+ * This class is the main class for the game, it contains the main method, and all the miscellaneous methods for the game
+ * 
+ */
 public class Scrabble{
     private static Scanner input = new Scanner(System.in);
 
     //TODO docstrings
-    //TODO comment code
 
-    // checks to see if word in word list
+    /**
+     * This function takes in input from the user and returns it as a string
+     * 
+     * @return The user input
+     */
     private static String getInput(){
         
             //Variable for storing input
@@ -25,9 +59,18 @@ public class Scrabble{
     }
 
 
-    //place word returns void
-    //takes in String word, String orientation, Coordinate starting_pos, String player
-    //places down a word
+    
+    /**
+     * This function takes a word, an orientation, a starting coordinate, a player, and a gameboard as
+     * parameters and places the word on the gameboard
+     * 
+     * @param word the word that is being placed
+     * @param orientation "vertical" or "horizontal"
+     * @param start The coordinate of the first letter of the word
+     * @param player The player who is placing the word
+     * @param gameboard a 2D array of tiles
+     * @throws InvalidOrientationException if the orientation is not either vertical or horizontal
+     */
     public static void placeWord(String word, String orientation, Coordinate start, player player, Board gameboard)throws InvalidOrientationException{
 
         boolean hasRemoved = false;
@@ -35,10 +78,12 @@ public class Scrabble{
         int row = start.getY();
         int col = start.getX();
 
+        //Loops through all the letters in the word
         for (String letter : toStringArray(word)){
             hasRemoved = false;
+            //places the word
             gameboard.getTile()[row][col].setPiece(new Piece(letter));
-
+            //removes placed piece from player deck
             for (Iterator<Piece> it = player.getDeck().iterator(); it.hasNext();) {
                 Piece p = it.next();
                 if (p.getLetter().equals(letter.toUpperCase()) && hasRemoved == false) {
@@ -47,6 +92,7 @@ public class Scrabble{
                 }
             }
 
+            //iterators through the tiles that the word is placed on
             if (orientation.equals("vertical")){
                 row ++;
             }
@@ -59,22 +105,40 @@ public class Scrabble{
         }
     }
     
+    /**
+     * It takes a string and returns an arrayList of the characters in the string
+     * 
+     * @param expr the expression to be evaluated
+     * @return An ArrayList of Strings
+     */
     public static ArrayList<String> toStringArray(String expr){
         ArrayList<String> wordArray = new ArrayList<String>();
+        //loops through all characters in a string and adds them to an arrayList
         for (int i = 0; i < expr.length(); i++){
             wordArray.add(expr.substring(i, i + 1));
         }
         return wordArray;
     } 
-    
-    //tallyWord
-    
+        
 
+    /**
+     * It takes a word, an orientation, a letter, a coordinate, and a gameboard, and returns the first
+     * coordinate of the word
+     * 
+     * @param word the word that the user is trying to place on the board
+     * @param orientation "vertical" or "horizontal"
+     * @param letter the letter that the user wants to place on the board
+     * @param letterCord the coordinate of the letter on the board
+     * @param gameboard the board object
+     * @return The starting coordinate of the word.
+     */
     public static Coordinate getStartFromLetter(String word, String orientation, String letter, Coordinate letterCord, Board gameboard){
-        System.out.println(letterCord);
+        //sets starting point for iteration
         int col = letterCord.getX();
         int row = letterCord.getY();
 
+
+        //iterators backward from the letter until there is a tile which is not occupied, to find the first starting coordinate
         if (orientation.equals("vertical")){
             while (gameboard.getTile()[row][col].getPiece() != null && row >= 0){
                 row--;
@@ -89,7 +153,14 @@ public class Scrabble{
         }
     }
 
+    /**
+     * This function takes in an orientation and returns the opposite orientation
+     * 
+     * @param orientation the orientation of the ship
+     * @return The opposite orientation of the given orientation.
+     */
     public static String oppositeOrientation(String orientation){
+        //returns opposites orientation
         if (orientation.equals("vertical")){
             return "horizontal";
         }
@@ -98,38 +169,59 @@ public class Scrabble{
         }
     }
 
-    //tallyPlay
-    
-
+    /**
+     * This function outputs the player menu for selecting actions
+     * 
+     * @param player player object who is using the menu
+     * @param gameboard a Board object
+     */
     public static void playerMenu(player player, Board gameboard){
+        //outputs player menu for selecting actions
         System.out.println(gameboard.toString());
         System.out.println(player.getName() + "\'s turn!" );
         System.out.println(player.deckToString());
         System.out.println("\n1. Play\n2. Exchange\n3. Pass");
     }
 
-    public static void exchangetiles(player player, Bag bag) {
+    /**
+     * The function takes in a player and a bag, and then asks the user to input the pieces they want
+     * to exchange. It then replaces the pieces with random pieces from the bag
+     * 
+     * @param player a player that wants to exchange pieces
+     * @param bag a bag object that contains all the pieces
+     */
+    public static void exchangePieces(player player, Bag bag) {
+        //Takes input for pieces that the user wants to exchanage 
         System.out.println("Enter pieces to replace: ");
         String replacePieces = getInput().replace(" ", "");
 
+        //TODO EXCHANGETILES INPUT VALIDATION
+        //creates an integer arrayList of pieces that need to be replaced
         ArrayList<Integer> replacePiecesList = new ArrayList<>();      
         for (int i = 0; i < replacePieces.length(); i ++){
             replacePiecesList.add(Integer.valueOf(replacePieces.substring(i, i + 1)));
         }
-
+        
         Random rand = new Random();
-        for (int piece : replacePiecesList){
-            piece = piece - 1;
+        //Replaces unwanted tiles with a random piece from bag
+        for (int pieceindex : replacePiecesList){
+            pieceindex = pieceindex- 1;
             int randint = rand.nextInt(0, bag.getContents().size());
             Piece randPiece = bag.getContents().get(randint);
-            player.getDeck().set(piece, randPiece);
+            player.getDeck().set(pieceindex, randPiece);
             bag.getContents().remove(randint);
         }
     }
 
 
+    /**
+     * It reads the last line of a text file, and returns the number after the hyphen, which is the highscore.
+     * 
+     * @return The highscore is being returned.
+     */
     public static int getHighScore(){
         int score = 0;
+        //loops through highscore file, and finds the highscore
         try {
             File file = new File("highscore.txt");
             Scanner input = new Scanner(file);
@@ -142,37 +234,50 @@ public class Scrabble{
             input.close();
             score = Integer.valueOf(replacedLine.substring(hyphinIndex + 1));
         }
+        //error handling for when a file isn't found
         catch (FileNotFoundException e){
             System.out.println("File does not exist.");
         }
         return score;
     }
 
+    /**
+     * This function writes the player's name and score to a file if the player's score is higher than
+     * the current high score
+     * 
+     * @param player the player object that has acheived the highscore
+     */
     public static void writeHighScore(player player){
+        //checks that player score is higher than current highscore
         if (player.getPoints() > getHighScore()){
+            //writes to the highscore file the new highscore and who acheveied it 
             try{
                 File file = new File("highscore.txt");
                 FileWriter writer = new FileWriter(file, true);
                 writer.write("\n" + player.getName() + " - " + String.valueOf(player.getPoints()));
                 writer.close();
             }
+            //error handling for when a file can't be opened
             catch (IOException e) {
                 System.out.println("File cannot be opened.");
             }
         }
     }
 
-
-    public static String getPlayerName(String ID){
-        System.out.printf("Enter player %s's name:", ID);
-        String name = getInput();
-        return name;
-    }
-    
-
+    /**
+     * This function takes in a player, gameboard, bag, and boolean value and prompts the user to enter
+     * a word, orientation, and starting coordinate for placing a word. If the word is valid, it places
+     * the word on the board and adds the points to the player's score
+     * 
+     * @param player the player who is playing the word
+     * @param gameboard the gameboard object
+     * @param bag the bag of tiles
+     * @param isFirstTurn boolean that determines if it's the first turn of the game
+     */
     public static void playWord(player player, Board gameboard, Bag bag, boolean isFirstTurn){
         while (true){
             try {
+                //takes in the word, orientation of word, and starting coordinate for placing a word
                 System.out.println("Enter word:");
                 String word = getInput();
     
@@ -182,6 +287,7 @@ public class Scrabble{
                 System.out.println("Enter start Coordinate: ");
                 Coordinate start = Coordinate.translateString(getInput());
                 
+                //validates that a word is a valid and can be placed
                 if (Validator.validateInput(word, orientation, start, player, gameboard, isFirstTurn)){
                     placeWord(word, orientation, start, player, gameboard);
                     System.out.printf("That play was worth %s points!", Integer.toString(Scorer.tallyPlay(word, start, orientation, player, gameboard, bag)));
@@ -189,6 +295,7 @@ public class Scrabble{
                 }
                 break;
             }
+            //error handling for a variety of cases
             catch(NotOnStarException e){
                 System.out.println("First word must be placed on the star in the middle!");
             }
@@ -210,9 +317,6 @@ public class Scrabble{
             catch (WordNotInDeckException e){
                 System.out.println("Word is not in Deck!");
             }
-            catch (InvalidConnectionException e){
-                System.out.println("Word has invalid connections!");
-            }
             catch(InvalidCoordinateException e){
                 System.out.println("Invalid Coordinate!");
             }
@@ -221,47 +325,81 @@ public class Scrabble{
     }
 
 
+    /**
+     * This function is called by the main game loop and is responsible for handling the player's turn
+     * 
+     * @param player the player whose turn it is
+     * @param gameboard a 2D array of tiles
+     * @param bag a bag of tiles
+     * @param isFirstTurn boolean, true if it's the first turn of the game, false otherwise
+     */
     public static void turn(player player, Board gameboard, Bag bag, boolean isFirstTurn)throws IllegalArgumentException, ChoiceOutofBoundsException{
         playerMenu(player, gameboard);
+        //gets the choice for the turn
         int choice = Integer.valueOf(getInput());
+        //TODO ERROR HANDLING
+
+        //calls respective method for player choice
         switch(choice){
             case 1:
                 playWord(player, gameboard, bag, isFirstTurn);
                 player.setPassNum(0);
                 break;
             case 2:
-                exchangetiles(player, bag);
+                exchangePieces(player, bag);
                 player.setPassNum(0);
                 break;
             case 3:
                 player.setPassNum(player.getPassNum() + 1);
                 break;
             default:
+                //
                 throw new ChoiceOutofBoundsException();
         }
         if (bag.getContents().size() > 0){
+            // if the bag isn't empty, refiles the players hand
             player.drawDeck(gameboard, bag);
         }
     }
 
+    /**
+     * This function generates a player object and returns it
+     * 
+     * @param gameboad the board object
+     * @param bag a bag of pieces
+     * @param playerID the player's ID number
+     * @return A player object
+     */
     public static player generateplayer(Board gameboad, Bag bag, int playerID){
+        //output to prompt for player name
         System.out.printf("Enter player #%d name:", playerID + 1);
+
         String playerName = getInput();
         player player = new player(playerID, playerName, 0, new ArrayList<Piece>());
         player.drawDeck(gameboad, bag); 
         return player;
     }
 
+    /**
+     * It takes a list of players and a bag of pieces, then it randomly assigns a piece to each player,
+     * then it finds the player with the highest piece, and then it calculates and outputs the order of the players
+     * 
+     * @param playerList ArrayList of player objects
+     * @param bag a bag object
+     * @return An ArrayList of players
+     */
     public static ArrayList<player> createPlayerOrder(ArrayList<player> playerList, Bag bag){
         Random rand = new Random();
         ArrayList<String> alpha = toStringArray("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
         ArrayList<Piece> pieceList = new ArrayList<>();
         Piece currentPiece;
+        //draws a random piece from the bag for each player
         for (int i = 0; i < playerList.size(); i ++){
             currentPiece = bag.getContents().get(rand.nextInt(0, bag.getContents().size()));
             pieceList.add(currentPiece);
             System.out.printf("%s has drawn a %s!\n", playerList.get(i).getName(), currentPiece.getLetter());
         }
+        //finds who has the closest piece to A
         Piece highestPiece = new Piece("Z");
         player currentPlayer;
         for (int a = 0; a < pieceList.size(); a ++){
@@ -275,13 +413,15 @@ public class Scrabble{
                 highestPiece = pieceList.get(a);
             }
         }
+        //reorganizes player who has the piece closest to A
         currentPlayer = playerList.get(pieceList.indexOf(highestPiece)).clone();
         playerList.remove(pieceList.indexOf(highestPiece));
         playerList.add(0, currentPlayer);
         System.out.printf("%s drew the highest letter, they will be first!\n", currentPlayer.getName());
+        //outputs order
         System.out.println("The order is as follows:");
         for (int i = 0; i < playerList.size();i++){
-
+            System.out.printf("%d. %s\n", i + 1, playerList.get(i).getName());
         }
 
 
@@ -289,10 +429,18 @@ public class Scrabble{
 
     }
 
+    /**
+     * It takes an ArrayList of players and returns true if all players have the same number of points
+     * 
+     * @param playerList ArrayList of player objects
+     * @return A boolean value
+     */
     public static boolean isTie(ArrayList<player> playerList){
+        //finds base value to compare everything else to
         int basevalue = playerList.get(0).getPoints();
         int ties = 0;
 
+        //detects if all other values are same
         for (int i = 1; i < playerList.size(); i++){
             if (playerList.get(i).getPoints() == basevalue){
                 ties++;
@@ -307,9 +455,18 @@ public class Scrabble{
         }
     }
     
+    
+    /**
+     * This function takes in an ArrayList of players and returns the player with the highest score
+     * 
+     * @param playerList ArrayList of players
+     * @return The player with the highest score
+     */
     public static player getWinner(ArrayList<player> playerList){
+        //creates a fake winner to compare too
         player highestPlayer = new player(0, "test", 0, null);
         player currentPlayer;
+        //compares all players score to each other
         for (int i = 0; i < playerList.size(); i ++){
             currentPlayer = playerList.get(i);
             if (currentPlayer.getPoints() > highestPlayer.getPoints()){
@@ -317,29 +474,38 @@ public class Scrabble{
                 
             }
         }
+        //returns player with highest score
         return highestPlayer;
     }
 
 
+    /**
+     * It's a function that runs the main loop of the game
+     */
     public static void main(String[] args) {
-        //creating objects
+        //creating objects, generating contents
         Board gameboard = new Board();
         Bag bag = new Bag(new HashMap<String, Integer>(), new ArrayList<Piece>());
         gameboard.generateBoard();
         bag.generateContents();
         bag.generateValues();
 
+        //getting amount of players
         System.out.println("Enter amount of players: ");
         int playerAmount = Integer.valueOf(getInput());
 
+        //generating players
         ArrayList<player> playerList = new ArrayList<>();
         for (int i = 0; i < playerAmount; i ++){
             playerList.add(generateplayer(gameboard, bag, i));
         }
+        //gets whose first in the player order
         playerList = createPlayerOrder(playerList, bag);
         
         boolean isFirstTurn = true;
+        //label for while loop (cuz im an academic weapon)
         outerloop:
+        //main game loop
         while (true){
             for (int b = 0; b < playerList.size(); b++){
                 while (true){
@@ -364,6 +530,7 @@ public class Scrabble{
             }
         }
 
+        //logic for win condition output
         if (! isTie(playerList)){
             player winner = getWinner(playerList);
             System.out.printf("%s wins with %d points! Congratulations!", winner.getName(), winner.getPoints());

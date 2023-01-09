@@ -27,6 +27,7 @@ class Bag {
     }
 
     public void generateValues(){
+        //defining point count for each group of letters
         String onePoint = "AEIOULNSTR";
         String twoPoint = "DG";
         String threePoint = "BCMP";
@@ -34,7 +35,7 @@ class Bag {
         String fivePoint = "K";
         String eightPoint = "JX";
         String tenPoint = "QZ";
-        
+        //iterators through each string of letters and assigns values
         for (String letter : Scrabble.toStringArray(onePoint)){
             values.put(letter, 1);
         }
@@ -63,6 +64,7 @@ class Bag {
         ArrayList<String> alpha = Scrabble.toStringArray("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
         int[] values = {9, 2, 2, 4, 12, 2, 3, 2, 9, 1, 1, 4, 2, 6, 8, 2, 1, 6, 4, 6, 4, 2, 2, 1, 2, 1};
         int numberNum;
+        //matches up amount of letters with each letter in the alphabet
         for (int i = 0; i < alpha.size(); i++){
             numberNum = values[i];
             for (int a = 0; a < numberNum; a++){
