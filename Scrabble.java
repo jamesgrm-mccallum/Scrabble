@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -69,47 +68,7 @@ public class Scrabble{
     } 
     
     //tallyWord
-    public static int tallyWord(String orientation, String word, Coordinate start, Board gameboard, player player, Bag bag){
-        int word_score = 0;
-        int lettermultiplier = 1;
-        int wordmultiplier = 1;
-
-        int row = start.getY();
-        int col = start.getX();
-
-        for (String letter : toStringArray(word)){
-            Tile currentTile = gameboard.getTile()[row][col];
-            if (currentTile.getType() != null){
-                if (currentTile.getType() == "2L"){
-                    lettermultiplier = 2;
-                }
-                else if (currentTile.getType() == "2W"){
-                    wordmultiplier = wordmultiplier * 2;
-                }
-                else if(currentTile.getType() == "3L"){
-                    lettermultiplier = 3;
-                }
-                else if (currentTile.getType() == "3W"){
-                    wordmultiplier = wordmultiplier * 3;
-                }
-            }
-            word_score += bag.getValues().get(letter.toUpperCase()) * lettermultiplier;
-            lettermultiplier = 1;
-
-            if (orientation.equals(("vertical"))){
-                row ++;
-            }
-            else if (orientation.equals("horizontal")){
-                col++;
-            }
-        }
-
-        if (word.length() == 7){
-            word_score += 50;
-        }
-        
-        return word_score * wordmultiplier;
-    }
+    
 
     public static Coordinate getStartFromLetter(String word, String orientation, String letter, Coordinate letterCord, Board gameboard){
         System.out.println(letterCord);
@@ -140,54 +99,7 @@ public class Scrabble{
     }
 
     //tallyPlay
-    public static int tallyPlay(String word, Coordinate start, String orientation, player player, Board gameboard, Bag bag){
-        int playScore = 0;
-
-        int row = start.getY();
-        int col = start.getX();
-
-        for (String letter : toStringArray(word)){
-            Coordinate letterCord = new Coordinate(col, row);
-            String[] connections;
-            
-            if (orientation.equals("vertical")){
-                if (row - start.getY() == word.length()){
-                    connections = Validator.findConnections(letter, getStartFromLetter(word, oppositeOrientation(orientation), letter, letterCord, gameboard), "last", player, gameboard);
-                }
-                else{
-                    connections = Validator.findConnections(letter, getStartFromLetter(word, oppositeOrientation(orientation), letter, letterCord, gameboard), orientation, player, gameboard);
-                }
-                
-                if (row == (start.getY() + word.length())){
-                    playScore += tallyWord(orientation, connections[0], start, gameboard, player, bag);
-                    playScore += tallyWord(orientation, connections[1], start, gameboard, player, bag);
-                }
-                else {
-                    playScore += tallyWord(orientation, connections[0], start, gameboard, player, bag);
-                }
-                row++;
-            }
-            else if(orientation.equals("horizontal")){
-                if (col - word.length() == start.getX() - 1){
-                    connections = Validator.findConnections(letter, getStartFromLetter(word, oppositeOrientation(orientation), letter, letterCord, gameboard), "last", player, gameboard);
-                }
-                else {
-                    connections = Validator.findConnections(letter, getStartFromLetter(word, oppositeOrientation(orientation), letter, letterCord, gameboard), orientation, player, gameboard);
-                }
-                if (col - word.length() == start.getX() - 1){
-                    playScore += tallyWord(orientation, connections[0], start, gameboard, player, bag);
-
-                    playScore += tallyWord(orientation, connections[1], start, gameboard, player, bag);
-                }
-                else {
-                    playScore += tallyWord(orientation, connections[1], start, gameboard, player, bag);
-                }
-                col++;
-            }
-        }   
-
-        return playScore;
-    }
+    
 
     public static void playerMenu(player player, Board gameboard){
         System.out.println(gameboard.toString());
@@ -200,7 +112,7 @@ public class Scrabble{
         System.out.println("Enter pieces to replace: ");
         String replacePieces = getInput().replace(" ", "");
 
-        ArrayList<Integer> replacePiecesList = new ArrayList<Integer>();      
+        ArrayList<Integer> replacePiecesList = new ArrayList<>();      
         for (int i = 0; i < replacePieces.length(); i ++){
             replacePiecesList.add(Integer.valueOf(replacePieces.substring(i, i + 1)));
         }
@@ -236,7 +148,7 @@ public class Scrabble{
         return score;
     }
 
-    public static void newHighScore(player player){
+    public static void writeHighScore(player player){
         if (player.getPoints() > getHighScore()){
             try{
                 File file = new File("highscore.txt");
@@ -272,8 +184,8 @@ public class Scrabble{
                 
                 if (Validator.validateInput(word, orientation, start, player, gameboard, isFirstTurn)){
                     placeWord(word, orientation, start, player, gameboard);
-                    System.out.printf("That play was worth %s points!", Integer.toString(tallyPlay(word, start, orientation, player, gameboard, bag)));
-                    player.setPoints(player.getPoints() + tallyPlay(word, start, orientation, player, gameboard, bag));
+                    System.out.printf("That play was worth %s points!", Integer.toString(Scorer.tallyPlay(word, start, orientation, player, gameboard, bag)));
+                    player.setPoints(player.getPoints() + Scorer.tallyPlay(word, start, orientation, player, gameboard, bag));
                 }
                 break;
             } 
@@ -326,36 +238,125 @@ public class Scrabble{
         }
     }
 
+    public static player generateplayer(Board gameboad, Bag bag, int playerID){
+        System.out.printf("Enter player #%d name:", playerID + 1);
+        String playerName = getInput();
+        player player = new player(playerID, playerName, 0, new ArrayList<Piece>());
+        player.drawDeck(gameboad, bag); 
+        return player;
+    }
+
+    public static ArrayList<player> createPlayerOrder(ArrayList<player> playerList, Bag bag){
+        Random rand = new Random();
+        ArrayList<String> alpha = toStringArray("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        ArrayList<Piece> pieceList = new ArrayList<>();
+        Piece currentPiece;
+        for (int i = 0; i < playerList.size(); i ++){
+            currentPiece = bag.getContents().get(rand.nextInt(0, bag.getContents().size()));
+            pieceList.add(currentPiece);
+            System.out.printf("%s has drawn a %s!\n", playerList.get(i).getName(), currentPiece.getLetter());
+        }
+        Piece highestPiece = new Piece("Z");
+        player currentPlayer;
+        for (int a = 0; a < pieceList.size(); a ++){
+            if (pieceList.get(a).getLetter() == "."){
+                currentPlayer = playerList.get(a).clone();
+                playerList.remove(a);
+                playerList.add(0, currentPlayer);
+                break;
+            }
+            if (alpha.indexOf(pieceList.get(a).getLetter()) < alpha.indexOf(highestPiece.getLetter())){
+                highestPiece = pieceList.get(a);
+            }
+        }
+        currentPlayer = playerList.get(pieceList.indexOf(highestPiece)).clone();
+        playerList.remove(pieceList.indexOf(highestPiece));
+        playerList.add(0, currentPlayer);
+        System.out.printf("%s drew the highest letter, they will be first!\n", currentPlayer.getName());
+        System.out.println("The order is as follows:");
+        for (int i = 0; i < playerList.size();i++){
+
+        }
+
+
+        return playerList;
+
+    }
+
+    public static boolean isTie(ArrayList<player> playerList){
+        int basevalue = playerList.get(0).getPoints();
+        int ties = 0;
+
+        for (int i = 1; i < playerList.size(); i++){
+            if (playerList.get(i).getPoints() == basevalue){
+                ties++;
+            }
+        }
+
+        if (ties == playerList.size() - 1){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    
+    public static player getWinner(ArrayList<player> playerList){
+        player highestPlayer = new player(0, "test", 0, null);
+        player currentPlayer;
+        for (int i = 0; i < playerList.size(); i ++){
+            currentPlayer = playerList.get(i);
+            if (currentPlayer.getPoints() > highestPlayer.getPoints()){
+                highestPlayer = currentPlayer.clone();
+                
+            }
+        }
+        return highestPlayer;
+    }
+
 
     public static void main(String[] args) {
         //creating objects
         Board gameboard = new Board();
         Bag bag = new Bag(new HashMap<String, Integer>(), new ArrayList<Piece>());
-        String player1_name = getPlayerName("1");
-        player player1 = new player(0, player1_name, 0, new ArrayList<Piece>());
-        String player2_name = getPlayerName("2");
-        player player2 = new player(0, player2_name, 0, new ArrayList<Piece>());
-        
-        //generating shit
         gameboard.generateBoard();
         bag.generateContents();
         bag.generateValues();
-        player1.drawDeck(gameboard, bag);
-        player2.drawDeck(gameboard, bag);
 
-        boolean isPlayerOneTurn = true;
-        boolean isFirstTurn = true;
+        System.out.println("Enter amount of players: ");
+        int playerAmount = Integer.valueOf(getInput());
 
-        while (player1.getPassNum() < 2 && player2.getPassNum() < 2){
-            if (isPlayerOneTurn){
-                turn(player1, gameboard, bag, isFirstTurn);
-                isPlayerOneTurn = false;
-            }
-            else {
-                turn(player2, gameboard, bag, isFirstTurn);
-                isPlayerOneTurn = true;
-            }
-            isFirstTurn = false;
+        ArrayList<player> playerList = new ArrayList<>();
+        for (int i = 0; i < playerAmount; i ++){
+            playerList.add(generateplayer(gameboard, bag, i));
         }
+        playerList = createPlayerOrder(playerList, bag);
+        
+        boolean isFirstTurn = true;
+        outerloop:
+        while (true){
+            for (int b = 0; b < playerList.size(); b++){
+                turn(playerList.get(b), gameboard, bag, isFirstTurn);
+                if (playerList.get(b).getPassNum() > 1){
+                    System.out.printf("%s has passed twice so the game is over!", playerList.get(b).getName());
+                    break outerloop;
+                }
+                if (bag.getContents().size() == 0){
+                    System.out.println("The bag is empty! Game over!");
+                    break outerloop;
+                }
+                isFirstTurn = false;
+            }
+        }
+
+        if (! isTie(playerList)){
+            player winner = getWinner(playerList);
+            System.out.printf("%s wins with %d points! Congratulations!", winner.getName(), winner.getPoints());
+            writeHighScore(winner);
+        }
+        else {
+            System.out.println("This match is a tie! No one with get a highscore because they are bad!");
+        }
+
     }
 }

@@ -50,6 +50,10 @@ class player {
     public void setPassNum(int passNum) {
         this.passNum = passNum;
     }
+    
+    public player clone(){
+        return new player(playerID, name, points, deck);
+    }
 
     public String deckToString(){
         String deckString = "";
@@ -70,6 +74,8 @@ class player {
             bag.getContents().remove(piece);
         }
     }
+
+    
 
     
 }
