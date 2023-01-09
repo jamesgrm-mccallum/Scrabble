@@ -290,7 +290,7 @@ public class Scrabble{
                 //validates that a word is a valid and can be placed
                 if (Validator.validateInput(word, orientation, start, player, gameboard, isFirstTurn)){
                     placeWord(word, orientation, start, player, gameboard);
-                    System.out.printf("That play was worth %s points!", Integer.toString(Scorer.tallyPlay(word, start, orientation, player, gameboard, bag)));
+                    System.out.printf("That play was worth %s points! \n", Integer.toString(Scorer.tallyPlay(word, start, orientation, player, gameboard, bag)));
                     player.setPoints(player.getPoints() + Scorer.tallyPlay(word, start, orientation, player, gameboard, bag));
                 }
                 break;
@@ -504,7 +504,7 @@ public class Scrabble{
         
         boolean isFirstTurn = true;
         //label for while loop (cuz im an academic weapon)
-        outerloop:
+        mainloop:
         //main game loop
         while (true){
             for (int b = 0; b < playerList.size(); b++){
@@ -520,13 +520,19 @@ public class Scrabble{
                 
                 if (playerList.get(b).getPassNum() > 1){
                     System.out.printf("%s has passed twice so the game is over!", playerList.get(b).getName());
-                    break outerloop;
+                    break mainloop;
                 }
                 if (bag.getContents().size() == 0){
                     System.out.println("The bag is empty! Game over!");
-                    break outerloop;
+                    break mainloop;
                 }
-                isFirstTurn = false;
+                if (gameboard.getTile()[7][7].getPiece() == null){
+                    isFirstTurn = true;
+                }
+                else {
+                    isFirstTurn = false;
+                }
+                
             }
         }
 

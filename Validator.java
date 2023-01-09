@@ -9,7 +9,7 @@ import java.util.Scanner;
  */
 public class Validator {
     //global instance variable used to keep track of words already used
-    private static ArrayList<String> wordsUsed;
+    private static ArrayList<String> wordsUsed = new ArrayList<>();
 
     /**
      * This function checks if the word is within the board
@@ -136,16 +136,26 @@ public class Validator {
         // for vertical word
         if (direction.equals("vertical")){
             for (int i = start.getY(); i < start.getY() + word.length(); i++){
-                if (gameboard.getTile()[i][start.getX()].getType().equals("STAR")){
-                    return true;
+                try{
+                    if (gameboard.getTile()[i][start.getX()].getType().equals("STAR")){
+                        return true;
+                    }
+                }
+                catch(NullPointerException e){
+                    continue;
                 }
             }
         }
         //for horizontal word
         else {
             for (int i = start.getX(); i < start.getX() + word.length(); i++){
-                if (gameboard.getTile()[start.getY()][i].getType().equals("STAR")){
-                    return true;
+                try{
+                    if (gameboard.getTile()[start.getY()][i].getType().equals("STAR")){
+                        return true;
+                    }
+                }
+                catch(NullPointerException e){
+                    continue;
                 }
             }
         }
@@ -169,22 +179,29 @@ public class Validator {
     public static String validateLetterConnection(String letter, Coordinate letterCord, String orientation, player player, Board gameboard){
         //gets the connections of a letter
         String[] connections = findConnections(letter, letterCord, orientation, player, gameboard);
-
+        int valid = 0;
         //checking if it is connected vertically
         if (connections[0].length() > 0){
             if (isWord(connections[0])){
-                return "connected";
+                valid++;
             }
         }
+        
 
         //checking if the letter is connected horizontally
         if (connections[1].length() > 0){
             if (isWord(connections[1])){
-                return "connected";
+                valid++;
             }
         }
         
-        return "empty";
+        
+        if (valid > 0){
+            return "valid";
+        }
+        else {
+            return "empty";
+        }
         
     }
 
@@ -203,6 +220,7 @@ public class Validator {
         //converts word to list of characters (as strings)
         ArrayList<String> wordList = Scrabble.toStringArray(word);
         int connectedCount = 0;
+        int emptyCount = 0;
         String letterConnectionState = "";
         for (int i = 0; i < word.length(); i++){
             //validates the connection of each letter in the world
@@ -213,19 +231,21 @@ public class Validator {
                 letterConnectionState = validateLetterConnection(wordList.get(i), new Coordinate(start.getX() + i,start.getY()) , direction, player, gameboard);
             }
 
-            if (letterConnectionState.equals("connected")){
+            if (letterConnectionState.equals("valid")){
                 connectedCount++;
+            }
+            else if (letterConnectionState.equals("empty")){
+                emptyCount++;
             }
         }
 
-        //changes result based on status of frist turn
-        if (isFirstTurn && connectedCount == 0){
+        if (connectedCount > 0){
             return true;
         }
-        else if (isFirstTurn == false && connectedCount == word.length()){
+        else if(isFirstTurn && emptyCount == word.length()){
             return true;
         }
-        else{
+        else {
             return false;
         }
     }
