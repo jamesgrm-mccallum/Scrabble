@@ -50,7 +50,6 @@ public class Scrabble{
      * @return The user input
      */
     private static String getInput(){
-        
             //Variable for storing input
             String userInput = input.next();
             
@@ -448,7 +447,7 @@ public class Scrabble{
         }
         return playerList;
     
-        
+
     }
 
     /**
