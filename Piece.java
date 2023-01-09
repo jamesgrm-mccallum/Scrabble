@@ -2,7 +2,7 @@
  * A Piece is an object that represents a letter on a tile
  */
 class Piece {
-    String letter;
+    private String letter;
     
     /**
      * Constructor for a piece object

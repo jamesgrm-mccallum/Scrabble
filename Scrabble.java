@@ -40,7 +40,7 @@ import java.util.HashMap;
  * This class is the main class for the game, it contains the main method, and all the miscellaneous methods for the game
  * 
  */
-public class Scrabble{
+class Scrabble{
     private static Scanner input = new Scanner(System.in);
 
 

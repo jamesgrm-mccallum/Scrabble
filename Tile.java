@@ -4,11 +4,11 @@
  * that is on the tile (if there is one). The location is the location of the tile on the board
  */
 class Tile {
-    Coordinate location;
-    String type;
-    Piece piece;
-    public static final String ANSI_YELLOW = "\u001B[33m";
-    public static final String ANSI_RESET = "\u001B[0m";
+    private Coordinate location;
+    private String type;
+    private Piece piece;
+    private static final String ANSI_YELLOW = "\u001B[33m";
+    private static final String ANSI_RESET = "\u001B[0m";
 
     /**
      * Constructor for a tile object

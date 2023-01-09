@@ -7,7 +7,7 @@ import java.util.Scanner;
 /**
  * This class is used to validate the input of the user
  */
-public class Validator {
+class Validator {
     //global instance variable used to keep track of words already used
     private static ArrayList<String> wordsUsed = new ArrayList<>();
 

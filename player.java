@@ -5,11 +5,11 @@ import java.util.Random;
  * The player class is used to store the player's name, points, deck, and pass number
  */
 class player {
-    int playerID;
-    String name;
-    int points;
-    ArrayList<Piece> deck = new ArrayList<Piece>();
-    int passNum;
+    private int playerID;
+    private String name;
+    private int points;
+    private ArrayList<Piece> deck = new ArrayList<Piece>();
+    private int passNum;
 
     /**
     * This is a constructor for the player class. It is used to create a new player object.

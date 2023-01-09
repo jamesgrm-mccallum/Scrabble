@@ -2,7 +2,7 @@
  * Class that is responsible for scoring words and plays in scrabble
  * 
  */
-public class Scorer {
+class Scorer {
 
 
     /**
