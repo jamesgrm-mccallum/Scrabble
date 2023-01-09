@@ -446,10 +446,9 @@ public class Scrabble{
         for (int i = 0; i < playerList.size();i++){
             System.out.printf("%d. %s\n", i + 1, playerList.get(i).getName());
         }
-
-
         return playerList;
-
+    
+        
     }
 
     /**
@@ -531,7 +530,7 @@ public class Scrabble{
 
 
     /**
-     * It's a function that runs the main loop of the game
+     * runs the main loop of the game
      */
     public static void main(String[] args) {
         //creating objects, generating contents
