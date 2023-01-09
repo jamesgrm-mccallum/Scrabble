@@ -44,6 +44,12 @@ class Scrabble{
     private static Scanner input = new Scanner(System.in);
 
 
+    public static void intro(){
+        System.out.println("Welcome to Scrabble!\n Please Find the rules at https://www.scrabblepages.com/scrabble/rules/");
+        System.out.println("This was created by James McCallum!");
+    }
+
+
     /**
      * This function takes in input from the user and returns it as a string
      * 
@@ -70,7 +76,7 @@ class Scrabble{
      * @param gameboard a 2D array of tiles
      * @throws InvalidOrientationException if the orientation is not either vertical or horizontal
      */
-    public static void placeWord(String word, String orientation, Coordinate start, player player, Board gameboard)throws InvalidOrientationException{
+    public static void placeWord(String word, String orientation, Coordinate start, Player player, Board gameboard)throws InvalidOrientationException{
 
         boolean hasRemoved = false;
 
@@ -174,7 +180,7 @@ class Scrabble{
      * @param player player object who is using the menu
      * @param gameboard a Board object
      */
-    public static void playerMenu(player player, Board gameboard){
+    public static void playerMenu(Player player, Board gameboard){
         //outputs player menu for selecting actions
         System.out.println(gameboard.toString());
         System.out.println(player.getName() + "\'s turn!" );
@@ -189,7 +195,7 @@ class Scrabble{
      * @param player a player that wants to exchange pieces
      * @param bag a bag object that contains all the pieces
      */
-    public static void exchangePieces(player player, Bag bag) {
+    public static void exchangePieces(Player player, Bag bag) {
         //Takes input for pieces that the user wants to exchanage 
         ArrayList<Integer> replacePiecesList;
         System.out.println("Enter pieces to replace: ");
@@ -261,7 +267,7 @@ class Scrabble{
      * 
      * @param player the player object that has acheived the highscore
      */
-    public static void writeHighScore(player player){
+    public static void writeHighScore(Player player){
         //checks that player score is higher than current highscore
         if (player.getPoints() > getHighScore()){
             //writes to the highscore file the new highscore and who acheveied it 
@@ -288,7 +294,7 @@ class Scrabble{
      * @param bag the bag of tiles
      * @param isFirstTurn boolean that determines if it's the first turn of the game
      */
-    public static void playWord(player player, Board gameboard, Bag bag, boolean isFirstTurn){
+    public static void playWord(Player player, Board gameboard, Bag bag, boolean isFirstTurn){
         while (true){
             try {
                 //takes in the word, orientation of word, and starting coordinate for placing a word
@@ -347,7 +353,7 @@ class Scrabble{
      * @param bag a bag of tiles
      * @param isFirstTurn boolean, true if it's the first turn of the game, false otherwise
      */
-    public static void turn(player player, Board gameboard, Bag bag, boolean isFirstTurn)throws IllegalArgumentException, ChoiceOutofBoundsException{
+    public static void turn(Player player, Board gameboard, Bag bag, boolean isFirstTurn)throws IllegalArgumentException, ChoiceOutofBoundsException{
         playerMenu(player, gameboard);
         //gets the choice for the turn
         int choice;
@@ -392,12 +398,12 @@ class Scrabble{
      * @param playerID the player's ID number
      * @return A player object
      */
-    public static player generateplayer(Board gameboad, Bag bag, int playerID){
+    public static Player generateplayer(Board gameboad, Bag bag, int playerID){
         //output to prompt for player name
         System.out.printf("Enter player #%d name:", playerID + 1);
 
         String playerName = getInput();
-        player player = new player(playerID, playerName, 0, new ArrayList<Piece>());
+        Player player = new Player(playerID, playerName, 0, new ArrayList<Piece>());
         player.drawDeck(gameboad, bag); 
         return player;
     }
@@ -410,7 +416,7 @@ class Scrabble{
      * @param bag a bag object
      * @return An ArrayList of players
      */
-    public static ArrayList<player> createPlayerOrder(ArrayList<player> playerList, Bag bag){
+    public static ArrayList<Player> createPlayerOrder(ArrayList<Player> playerList, Bag bag){
         Random rand = new Random();
         ArrayList<String> alpha = toStringArray("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
         ArrayList<Piece> pieceList = new ArrayList<>();
@@ -423,7 +429,7 @@ class Scrabble{
         }
         //finds who has the closest piece to A
         Piece highestPiece = new Piece("Z");
-        player currentPlayer;
+        Player currentPlayer;
         for (int a = 0; a < pieceList.size(); a ++){
             if (pieceList.get(a).getLetter() == "."){
                 currentPlayer = playerList.get(a).clone();
@@ -456,7 +462,7 @@ class Scrabble{
      * @param playerList ArrayList of player objects
      * @return A boolean value
      */
-    public static boolean isTie(ArrayList<player> playerList){
+    public static boolean isTie(ArrayList<Player> playerList){
         //finds base value to compare everything else to
         int basevalue = playerList.get(0).getPoints();
         int ties = 0;
@@ -483,10 +489,10 @@ class Scrabble{
      * @param playerList ArrayList of players
      * @return The player with the highest score
      */
-    public static player getWinner(ArrayList<player> playerList){
+    public static Player getWinner(ArrayList<Player> playerList){
         //creates a fake winner to compare too
-        player highestPlayer = new player(0, "test", 0, null);
-        player currentPlayer;
+        Player highestPlayer = new Player(0, "test", 0, null);
+        Player currentPlayer;
         //compares all players score to each other
         for (int i = 0; i < playerList.size(); i ++){
             currentPlayer = playerList.get(i);
@@ -542,7 +548,7 @@ class Scrabble{
         int playerAmount = getPlayerAmount();
 
         //generating players
-        ArrayList<player> playerList = new ArrayList<>();
+        ArrayList<Player> playerList = new ArrayList<>();
         for (int i = 0; i < playerAmount; i ++){
             playerList.add(generateplayer(gameboard, bag, i));
         }
@@ -585,7 +591,7 @@ class Scrabble{
 
         //logic for win condition output
         if (! isTie(playerList)){
-            player winner = getWinner(playerList);
+            Player winner = getWinner(playerList);
             System.out.printf("%s wins with %d points! Congratulations!", winner.getName(), winner.getPoints());
             writeHighScore(winner);
         }

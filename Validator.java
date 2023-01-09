@@ -20,7 +20,7 @@ class Validator {
      * @param player the player who is placing the word
      * @return A boolean value
      */
-    public static boolean withinBoard(String word, String direction, Coordinate start, player player){
+    public static boolean withinBoard(String word, String direction, Coordinate start, Player player){
         if (start.getX() <= 14 && start.getX() >= 0 && start.getY() <= 14 && start.getY() >= 0){
             // logic for getting endpoint of word
             Coordinate endPoint;
@@ -82,7 +82,7 @@ class Validator {
      * @throws NotOnStarException if the first word isn't placed on the star
      * 
      */
-    public static boolean validateInput(String word, String direction, Coordinate start, player player, Board gameboard, boolean isFirstTurn)throws WordNotWithinRangeException, WordNotFoundException, InvalidOrientationException, WordNotInDeckException, WordNotConnectedException, WordAlreadyUsedException, NotOnStarException{
+    public static boolean validateInput(String word, String direction, Coordinate start, Player player, Board gameboard, boolean isFirstTurn)throws WordNotWithinRangeException, WordNotFoundException, InvalidOrientationException, WordNotInDeckException, WordNotConnectedException, WordAlreadyUsedException, NotOnStarException{
         if (isFirstTurn){
             if (! isOnStar(word, direction, start, gameboard)){
                 throw new NotOnStarException();
@@ -176,7 +176,7 @@ class Validator {
      * @param gameboard the board object
      * @return The method is returning a string.
      */
-    public static String validateLetterConnection(String letter, Coordinate letterCord, String orientation, player player, Board gameboard){
+    public static String validateLetterConnection(String letter, Coordinate letterCord, String orientation, Player player, Board gameboard){
         //gets the connections of a letter
         String[] connections = findConnections(letter, letterCord, orientation, player, gameboard);
         int valid = 0;
@@ -216,7 +216,7 @@ class Validator {
      * @param isFirstTurn boolean
      * @return true if the word is connected properly, false otherwise
      */
-    public static boolean validateWordConnection(String word, String direction, Coordinate start, player player, Board gameboard, boolean isFirstTurn){
+    public static boolean validateWordConnection(String word, String direction, Coordinate start, Player player, Board gameboard, boolean isFirstTurn){
         //converts word to list of characters (as strings)
         ArrayList<String> wordList = Scrabble.toStringArray(word);
         int connectedCount = 0;
@@ -260,7 +260,7 @@ class Validator {
      * @param gameboard the board object
      * @return The number of letters that are valid.
      */
-    public static Integer validLetter(String word, String orientation, Coordinate start, player player, Board gameboard){
+    public static Integer validLetter(String word, String orientation, Coordinate start, Player player, Board gameboard){
         int iterations = 0;
         int row = start.getY();
         int col = start.getX();
@@ -338,7 +338,7 @@ class Validator {
      * @param gameboard the board object
      * @return an array containing the connection of the letter on both axis
      */
-    public static String[] findConnections(String letter, Coordinate letterCord, String orientation, player player, Board gameboard){
+    public static String[] findConnections(String letter, Coordinate letterCord, String orientation, Player player, Board gameboard){
         String wordVertical = "";
         String wordHorizontal = "";
         String right = "";
