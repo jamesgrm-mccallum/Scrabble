@@ -501,6 +501,34 @@ public class Scrabble{
         return highestPlayer;
     }
 
+    
+    /** 
+     * Takes input for and handles errors for amount of players
+     * @return amount of players to be generated
+     */
+    public static int getPlayerAmount(){
+        int playerAmount;
+        while (true){
+            try{
+                //getting amount of players
+                System.out.println("Enter amount of players: ");
+                playerAmount = Integer.valueOf(getInput());
+                //checks that playerAmount is a valid amount
+                if (playerAmount > 1 && playerAmount < 4 ){
+                    break;
+                }
+                else{
+                    //checks that playerAmount is a valid integer
+                    System.out.println("Player amount must be a number between 2-4!");
+                }
+            }
+            catch (NumberFormatException e){
+                System.out.println("Player amount be a number between 2-4!");
+            }
+        }
+        return playerAmount;
+    }
+
 
     /**
      * It's a function that runs the main loop of the game
@@ -513,9 +541,7 @@ public class Scrabble{
         bag.generateContents();
         bag.generateValues();
 
-        //getting amount of players
-        System.out.println("Enter amount of players: ");
-        int playerAmount = Integer.valueOf(getInput());
+        int playerAmount = getPlayerAmount();
 
         //generating players
         ArrayList<player> playerList = new ArrayList<>();
