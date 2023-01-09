@@ -9,6 +9,7 @@
  *  - highscore.txt
  *  - InvalidConnectionException.java
  *  - InvalidCoordinateException.java
+ *  - InvalidExchangeFormatException.java
  *  - InvalidOrienationException.java
  *  - NotOnStarException.java
  *  - Piece.java
@@ -42,7 +43,6 @@ import java.util.HashMap;
 public class Scrabble{
     private static Scanner input = new Scanner(System.in);
 
-    //TODO docstrings
 
     /**
      * This function takes in input from the user and returns it as a string
@@ -57,7 +57,7 @@ public class Scrabble{
             //returns input
             return userInput;
     }
-
+    
 
     
     /**
@@ -192,24 +192,39 @@ public class Scrabble{
      */
     public static void exchangePieces(player player, Bag bag) {
         //Takes input for pieces that the user wants to exchanage 
+        ArrayList<Integer> replacePiecesList;
         System.out.println("Enter pieces to replace: ");
-        String replacePieces = getInput().replace(" ", "");
-
-        //TODO EXCHANGETILES INPUT VALIDATION
-        //creates an integer arrayList of pieces that need to be replaced
-        ArrayList<Integer> replacePiecesList = new ArrayList<>();      
-        for (int i = 0; i < replacePieces.length(); i ++){
-            replacePiecesList.add(Integer.valueOf(replacePieces.substring(i, i + 1)));
-        }
-        
-        Random rand = new Random();
-        //Replaces unwanted tiles with a random piece from bag
-        for (int pieceindex : replacePiecesList){
-            pieceindex = pieceindex- 1;
-            int randint = rand.nextInt(0, bag.getContents().size());
-            Piece randPiece = bag.getContents().get(randint);
-            player.getDeck().set(pieceindex, randPiece);
-            bag.getContents().remove(randint);
+        while (true){
+            try{
+                String replacePieces = getInput().replace(" ", "");
+                //creates an integer arrayList of pieces that need to be replaced
+                replacePiecesList = new ArrayList<>();      
+                for (int i = 0; i < replacePieces.length(); i ++){
+                    replacePiecesList.add(Integer.valueOf(replacePieces.substring(i, i + 1)));
+                }
+                if (replacePiecesList.size() > player.getDeck().size()){
+                    throw new InvalidExchangeFormatException();
+                }
+                Random rand = new Random();
+                //Replaces unwanted tiles with a random piece from bag
+                for (int pieceindex : replacePiecesList){
+                    if (pieceindex > 7 || pieceindex < 1){
+                        throw new InvalidExchangeFormatException();
+                    }
+                    pieceindex = pieceindex - 1;
+                    int randint = rand.nextInt(0, bag.getContents().size());
+                    Piece randPiece = bag.getContents().get(randint);
+                    player.getDeck().set(pieceindex, randPiece);
+                    bag.getContents().remove(randint);
+                }
+                break;
+            }
+            catch(NumberFormatException e){
+                System.out.println("Must be in format: 1 4 3 7");
+            }
+            catch(InvalidExchangeFormatException e){
+                System.out.println("Exchange format incorrect!");
+            }
         }
     }
 
@@ -336,8 +351,16 @@ public class Scrabble{
     public static void turn(player player, Board gameboard, Bag bag, boolean isFirstTurn)throws IllegalArgumentException, ChoiceOutofBoundsException{
         playerMenu(player, gameboard);
         //gets the choice for the turn
-        int choice = Integer.valueOf(getInput());
-        //TODO ERROR HANDLING
+        int choice;
+        while (true){
+            try {
+                choice = Integer.valueOf(getInput());
+                break;
+            }
+            catch(NumberFormatException e){
+                System.out.println("Choice must be a number from 1-3!");
+            }
+        }
 
         //calls respective method for player choice
         switch(choice){
