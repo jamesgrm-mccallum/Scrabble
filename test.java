@@ -48,9 +48,7 @@ public class test {
         
     }
     public static void main(String[] args) {
-        String string="whatever";
-        String reverse = new StringBuffer(string).reverse().toString();
-        System.out.println(reverse);
-
+        player player = new player(0,"jamez", 10000, null);
+        newHighScore(player);
     }
 }

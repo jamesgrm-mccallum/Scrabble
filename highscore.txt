@@ -1,5 +1,0 @@
-hellothere = 0
-high = 50
-first - 123
-James - 150
-James - 200

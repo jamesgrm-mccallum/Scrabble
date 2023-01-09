@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class Validator {
+    private static ArrayList<String> wordsUsed;
 
     public static boolean withinBoard(String word, String direction, Coordinate start, player player) throws InvalidOrientationException{
         if (start.getX() <= 14 && start.getX() >= 0 && start.getY() <= 14 && start.getY() >= 0){
@@ -33,10 +34,24 @@ public class Validator {
             return false;
         }
     }
+
+    public static boolean wordNotUsed(String word){
+        for (int i = 0; i < wordsUsed.size(); i++){
+            if (word.equalsIgnoreCase(wordsUsed.get(i))){
+                return false;
+            }
+        }
+        return true;
+    }
     
 
     
-    public static boolean validateInput(String word, String direction, Coordinate start, player player, Board gameboard, boolean isFirstTurn)throws IllegalArgumentException, WordNotWithinRangeException, WordNotFoundException, InvalidOrientationException, WordNotInDeckException, InvalidConnectionException, WordNotConnected{
+    public static boolean validateInput(String word, String direction, Coordinate start, player player, Board gameboard, boolean isFirstTurn)throws IllegalArgumentException, WordNotWithinRangeException, WordNotFoundException, InvalidOrientationException, WordNotInDeckException, InvalidConnectionException, WordNotConnectedException, WordAlreadyUsedException, NotOnStarException{
+        if (isFirstTurn){
+            if (! isOnStar(word, direction, start, gameboard)){
+                throw new NotOnStarException();
+            }
+        }
         // checks that word is a word in the dictionary
         if (isWord(word)){
             //Checks that the word has the correct pieces to be placed
@@ -44,10 +59,15 @@ public class Validator {
                 //Checks that start point is within board
                 if (withinBoard(word, direction, start, player)){
                     if (validateWordConnection(word, direction, start, player, gameboard, isFirstTurn)){
-                        return true;
+                        if (wordNotUsed(word)){
+                            return true;
+                        }
+                        else {
+                            throw new WordAlreadyUsedException();
+                        }
                     }
                     else {
-                        throw new WordNotConnected();
+                        throw new WordNotConnectedException();
                     }
                 }
                 else{
@@ -61,6 +81,27 @@ public class Validator {
         else {
             throw new WordNotFoundException();
         }
+    }
+
+    public static boolean isOnStar(String word, String direction, Coordinate start, Board gameboard){
+        if (direction.equals("vertical")){
+            for (int i = start.getY(); i < start.getY() + word.length(); i++){
+                if (gameboard.getTile()[i][start.getX()].getType().equals("STAR")){
+                    return true;
+                }
+            }
+        }
+        else {
+            for (int i = start.getX(); i < start.getX() + word.length(); i++){
+                if (gameboard.getTile()[start.getY()][i].getType().equals("STAR")){
+                    return true;
+                }
+            }
+        }
+
+        return false;
+
+        
     }
 
 
@@ -252,4 +293,5 @@ public class Validator {
         return false;
 
     }
+
 }

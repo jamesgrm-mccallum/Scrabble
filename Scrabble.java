@@ -188,8 +188,14 @@ public class Scrabble{
                     player.setPoints(player.getPoints() + Scorer.tallyPlay(word, start, orientation, player, gameboard, bag));
                 }
                 break;
-            } 
-            catch(WordNotConnected e){
+            }
+            catch(NotOnStarException e){
+                System.out.println("First word must be placed on the star in the middle!");
+            }
+            catch(WordAlreadyUsedException e){
+                System.out.println("That word has already been used!");
+            }
+            catch(WordNotConnectedException e){
                 System.out.println("Word is not connected!");
             }
             catch (WordNotFoundException e){
@@ -215,7 +221,7 @@ public class Scrabble{
     }
 
 
-    public static void turn(player player, Board gameboard, Bag bag, boolean isFirstTurn)throws IllegalArgumentException{
+    public static void turn(player player, Board gameboard, Bag bag, boolean isFirstTurn)throws IllegalArgumentException, ChoiceOutofBoundsException{
         playerMenu(player, gameboard);
         int choice = Integer.valueOf(getInput());
         switch(choice){
@@ -231,7 +237,7 @@ public class Scrabble{
                 player.setPassNum(player.getPassNum() + 1);
                 break;
             default:
-                throw new IllegalArgumentException(); //TODO add ChoiceOutofBoundsException
+                throw new ChoiceOutofBoundsException();
         }
         if (bag.getContents().size() > 0){
             player.drawDeck(gameboard, bag);
@@ -336,7 +342,16 @@ public class Scrabble{
         outerloop:
         while (true){
             for (int b = 0; b < playerList.size(); b++){
-                turn(playerList.get(b), gameboard, bag, isFirstTurn);
+                while (true){
+                    try{
+                        turn(playerList.get(b), gameboard, bag, isFirstTurn);
+                        break;
+                    }
+                    catch(ChoiceOutofBoundsException e){
+                        System.out.println("Choice must be from 1-3!");
+                    }
+                }
+                
                 if (playerList.get(b).getPassNum() > 1){
                     System.out.printf("%s has passed twice so the game is over!", playerList.get(b).getName());
                     break outerloop;
