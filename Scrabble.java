@@ -51,7 +51,7 @@ class Scrabble{
      */
     private static String getInput(){
             //Variable for storing input
-            String userInput = input.next();
+            String userInput = input.nextLine();
             
             //returns input
             return userInput;
