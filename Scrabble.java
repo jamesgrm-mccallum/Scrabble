@@ -24,6 +24,7 @@
  *  - WordNotFoundException.java
  *  - WordNotInDeckException.java
  *  - WordNotWithinrangeException.java
+ *  - ScrabbleUML.pdf
  */
 
 import java.util.ArrayList;
