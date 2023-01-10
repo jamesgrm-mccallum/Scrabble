@@ -1,4 +1,4 @@
-public class InvalidOrientationException extends Exception {
+class InvalidOrientationException extends Exception {
     public InvalidOrientationException(){
         super();
     }

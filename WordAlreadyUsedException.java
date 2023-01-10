@@ -1,4 +1,4 @@
-public class WordAlreadyUsedException extends Exception {
+class WordAlreadyUsedException extends Exception {
     public WordAlreadyUsedException(){
         super();
     }

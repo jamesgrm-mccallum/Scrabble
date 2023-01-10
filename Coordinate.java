@@ -25,6 +25,7 @@ class Coordinate {
         this.y = y;
     }
     
+    @Override
     public String toString(){
         return "(" + String.valueOf(x) + ", " + String.valueOf(y) + ")";
     }
@@ -37,6 +38,8 @@ class Coordinate {
             return false;
         }
     }
+
+    
 
     public static Coordinate translateString(String expr) throws InvalidCoordinateException{
         ArrayList<String> alpha = Scrabble.toStringArray("ABCDEFGHIJKLMNO");
@@ -56,6 +59,11 @@ class Coordinate {
             throw new InvalidCoordinateException();
         }
         
+    }
+
+    @Override
+    public Coordinate clone(){
+        return new Coordinate(x, y);
     }
 
 }

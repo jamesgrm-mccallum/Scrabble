@@ -1,4 +1,4 @@
-public class WordNotWithinRangeException extends Exception { 
+class WordNotWithinRangeException extends Exception { 
     public WordNotWithinRangeException() {
         super();
     }

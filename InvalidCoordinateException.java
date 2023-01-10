@@ -1,4 +1,4 @@
-public class InvalidCoordinateException extends Exception {
+class InvalidCoordinateException extends Exception {
     public InvalidCoordinateException(){
         super();
     }

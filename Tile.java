@@ -85,6 +85,7 @@ class Tile {
      * 
      * @return The method returns a string.
      */
+    @Override
     public String toString(){
         if (piece != null){ //displays letter if it has one (with special colors)
             return ANSI_YELLOW  + piece.getLetter() + ANSI_RESET;
