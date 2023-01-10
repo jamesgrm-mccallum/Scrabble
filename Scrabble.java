@@ -189,6 +189,23 @@ class Scrabble{
         System.out.println("\n1. Play\n2. Exchange\n3. Pass");
     }
 
+    public static void leaderboard(){
+        Scanner reader = new Scanner("File");
+        String accum = "";
+        String readerLine = "";
+        for (int i = 1; i < 11; i++){
+            accum += String.valueOf(i) + ". ";
+            while (reader.hasNextLine()) {
+                readerLine = input.nextLine();
+            }
+            if (readerLine.contains("-")){
+                accum += readerLine.substring(0, readerLine.indexOf("-") - 1);
+            }
+            System.out.println(accum);
+        }
+        reader.close();
+    }
+
     /**
      * The function takes in a player and a bag, and then asks the user to input the pieces they want
      * to exchange. It then replaces the pieces with random pieces from the bag
@@ -599,6 +616,6 @@ class Scrabble{
         else {
             System.out.println("This match is a tie! No one with get a highscore because they are bad!");
         }
-
+        leaderboard();
     }
 }

@@ -48,7 +48,6 @@ public class test {
         
     }
     public static void main(String[] args) {
-        Player player = new Player(0,"jamez", 10000, null);
-        newHighScore(player);
+        Scrabble.leaderboard();
     }
 }
