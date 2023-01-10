@@ -4,7 +4,7 @@ import java.util.Random;
 /**
  * The player class is used to store the player's name, points, deck, and pass number
  */
-class player {
+class Player {
     private int playerID;
     private String name;
     private int points;
@@ -18,7 +18,7 @@ class player {
     * @param points points that a player has
     * @param deck deck of pieces 
     */
-    public player(int playerID, String name, int points, ArrayList<Piece> deck) {
+    public Player(int playerID, String name, int points, ArrayList<Piece> deck) {
         this.playerID = playerID;
         this.name = name;
         this.points = points;
@@ -122,8 +122,8 @@ class player {
      * 
      * @return A new player object with the same values as the original player object.
      */
-    public player clone(){
-        return new player(playerID, name, points, deck);
+    public Player clone(){
+        return new Player(playerID, name, points, deck);
     }
 
     /**

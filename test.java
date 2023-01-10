@@ -25,7 +25,7 @@ public class test {
         }
         return score;
     }
-    public static void newHighScore(player player){
+    public static void newHighScore(Player player){
         if (player.getPoints() > tester()){
             try{
                 File file = new File("highscore.txt");
@@ -48,7 +48,7 @@ public class test {
         
     }
     public static void main(String[] args) {
-        player player = new player(0,"jamez", 10000, null);
+        Player player = new Player(0,"jamez", 10000, null);
         newHighScore(player);
     }
 }

@@ -1,4 +1,4 @@
-public class InvalidConnectionException extends Exception {
+class InvalidConnectionException extends Exception {
     public InvalidConnectionException(){
         super();
     }

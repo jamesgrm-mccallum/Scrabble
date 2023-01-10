@@ -17,7 +17,7 @@ class Scorer {
      * @param bag the bag of tiles
      * @return The score of the word being played.
      */
-    public static int tallyWord(String orientation, String word, Coordinate start, Board gameboard, player player, Bag bag){
+    public static int tallyWord(String orientation, String word, Coordinate start, Board gameboard, Player player, Bag bag){
         int word_score = 0;
         int lettermultiplier = 1;
         int wordmultiplier = 1;
@@ -73,7 +73,7 @@ class Scorer {
      * @param bag the bag of tiles
      * @return The score of the word being played.
      */
-    public static int tallyPlay(String word, Coordinate start, String orientation, player player, Board gameboard, Bag bag){
+    public static int tallyPlay(String word, Coordinate start, String orientation, Player player, Board gameboard, Bag bag){
         int playScore = 0;
 
         int row = start.getY();

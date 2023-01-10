@@ -35,4 +35,19 @@ class Piece {
         return letter;
     }
 
+    
+    public boolean equals(Piece other){
+        if (letter.equalsIgnoreCase(other.getLetter())){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    
+    @Override
+    public Piece clone(){
+        return new Piece(letter);
+    }
+
 }

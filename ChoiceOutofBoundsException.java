@@ -1,4 +1,4 @@
-public class ChoiceOutofBoundsException extends Exception {
+class ChoiceOutofBoundsException extends Exception {
     public ChoiceOutofBoundsException(){
         super();
     }
