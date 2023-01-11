@@ -189,21 +189,43 @@ class Scrabble{
         System.out.println("\n1. Play\n2. Exchange\n3. Pass");
     }
 
+    /**
+     * A function that prints to console a leaderboard with the top 10 highest scores recorded in highscore.txt
+     * 
+     */
     public static void leaderboard(){
-        Scanner reader = new Scanner("File");
-        String accum = "";
-        String readerLine = "";
-        for (int i = 1; i < 11; i++){
-            accum += String.valueOf(i) + ". ";
-            while (reader.hasNextLine()) {
-                readerLine = input.nextLine();
+        try{
+            File file = new File("highscore.txt");
+            Scanner reader = new Scanner(file);
+            String line = "";
+            String accum = "";
+            ArrayList<String> highscoreList = new ArrayList<>();
+            System.out.println("leaderboard: ");
+            //adds all lines in the highscore file to an arrayList
+            while (reader.hasNextLine()){
+                line = reader.nextLine();
+                highscoreList.add(line.substring(0, line.indexOf("-") - 1));
             }
-            if (readerLine.contains("-")){
-                accum += readerLine.substring(0, readerLine.indexOf("-") - 1);
+            int pointer = highscoreList.size();
+            //iterates from 1-10, choosing names from highscore list in reverse to output
+            for (int i = 0; i < 10; i++){
+                accum += Integer.toString(i + 1) + ". ";
+                if (pointer != 0){
+                    pointer--;
+                    accum += highscoreList.get(pointer);
+                }
+                else{
+                    break;
+                }
+                System.out.println(accum);
+                accum = "";
             }
-            System.out.println(accum);
+            
+            reader.close();
         }
-        reader.close();
+        catch(FileNotFoundException e){
+            System.out.println("highscore.txt is not found! Please create a highscore file with a starting line \n with a first line of 'test - 0'");
+        }
     }
 
     /**
